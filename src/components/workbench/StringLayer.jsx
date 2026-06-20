@@ -34,7 +34,7 @@ function StringLayer({
               onMouseEnter={onHoverStart(task, 'string')}
               onMouseMove={onHoverMove}
               onMouseLeave={onHoverEnd}
-              onClick={onActivate(task)}
+              onClick={onActivate(task, 'string')}
             />
           </g>
         );

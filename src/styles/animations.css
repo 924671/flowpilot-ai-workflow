@@ -44,6 +44,26 @@
   }
 }
 
+@keyframes balloonPop {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: saturate(1);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translate3d(0, -4px, 0) scale(1.08);
+    filter: saturate(1.08);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.16);
+    filter: saturate(1.15);
+  }
+}
+
 @keyframes stringCutFade {
   0% {
     opacity: 1;

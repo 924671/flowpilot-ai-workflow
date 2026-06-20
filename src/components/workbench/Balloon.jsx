@@ -4,6 +4,7 @@ function Balloon({
   task,
   index,
   isReleased,
+  isPopped,
   isDimmed,
   onHoverStart,
   onHoverMove,
@@ -24,7 +25,7 @@ function Balloon({
   return (
     <button
       type="button"
-      className={`balloon balloon--${task.color} ${isReleased ? 'is-released' : ''} ${isDimmed ? 'is-dimmed' : ''}`}
+      className={`balloon balloon--${task.color} ${isReleased ? 'is-released' : ''} ${isPopped ? 'is-popped' : ''} ${isDimmed ? 'is-dimmed' : ''}`}
       style={{
         left: `${task.balloonPosition.x + offset.x}px`,
         top: `${task.balloonPosition.y + offset.y}px`,
@@ -34,7 +35,7 @@ function Balloon({
       onMouseMove={onHoverMove}
       onMouseLeave={onHoverEnd}
       onClick={onActivate}
-      disabled={isReleased || isDimmed}
+      disabled={isReleased || isPopped || isDimmed}
       aria-label={task.name}
     >
       <div className="balloon__body">

@@ -24,6 +24,7 @@ function BalloonWorkbench({
   const [activeTaskId, setActiveTaskId] = useState(null);
   const [cutTaskId, setCutTaskId] = useState(null);
   const [releasedTaskId, setReleasedTaskId] = useState(null);
+  const [poppedTaskId, setPoppedTaskId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalTimerRef = useRef(null);
 
@@ -74,7 +75,7 @@ function BalloonWorkbench({
     }));
   };
 
-  const handleActivate = (task) => (event) => {
+  const handleActivate = (task, trigger = 'string') => (event) => {
     event.preventDefault();
 
     if (activeTaskId) {
@@ -88,7 +89,8 @@ function BalloonWorkbench({
     }));
     setActiveTaskId(task.id);
     setCutTaskId(task.id);
-    setReleasedTaskId(task.id);
+    setReleasedTaskId(trigger === 'string' ? task.id : null);
+    setPoppedTaskId(trigger === 'balloon' ? task.id : null);
     setIsModalOpen(false);
 
     if (modalTimerRef.current) {
@@ -117,6 +119,7 @@ function BalloonWorkbench({
     setActiveTaskId(null);
     setCutTaskId(null);
     setReleasedTaskId(null);
+    setPoppedTaskId(null);
   };
 
   return (
@@ -188,6 +191,7 @@ function BalloonWorkbench({
         <div className="balloon-workbench__balloons">
           {tasks.map((task, index) => {
             const isReleased = releasedTaskId === task.id;
+            const isPopped = poppedTaskId === task.id;
             const isDimmed = Boolean(activeTaskId) && activeTaskId !== task.id;
 
             return (
@@ -196,11 +200,12 @@ function BalloonWorkbench({
                 task={task}
                 index={index}
                 isReleased={isReleased}
+                isPopped={isPopped}
                 isDimmed={isDimmed}
                 onHoverStart={handleHoverStart(task, 'balloon')}
                 onHoverMove={handleHoverMove}
                 onHoverEnd={handleHoverEnd}
-                onActivate={handleActivate(task)}
+                onActivate={handleActivate(task, 'balloon')}
               />
             );
           })}
