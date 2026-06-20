@@ -64,6 +64,49 @@
   }
 }
 
+@keyframes balloonShardDrop {
+  0% {
+    opacity: 0;
+    transform:
+      translate3d(var(--shard-x), var(--shard-y), 0)
+      rotate(var(--shard-rotate))
+      scale(0.7);
+  }
+
+  18% {
+    opacity: 1;
+    transform:
+      translate3d(calc(var(--shard-x) * 0.7), calc(var(--shard-y) * 0.6), 0)
+      rotate(calc(var(--shard-rotate) * 0.7))
+      scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(calc(var(--shard-x) * 1.25), calc(var(--shard-y) + 126px), 0)
+      rotate(calc(var(--shard-rotate) * 2.3))
+      scale(0.46);
+  }
+}
+
+@keyframes balloonPopFlash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+
+  35% {
+    opacity: 0.72;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.45);
+  }
+}
+
 @keyframes stringCutFade {
   0% {
     opacity: 1;

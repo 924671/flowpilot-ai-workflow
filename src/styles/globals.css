@@ -628,6 +628,7 @@ button {
 
 .balloon__body {
   position: relative;
+  z-index: 2;
   min-height: 190px;
   padding: 28px 18px 16px;
   border: 1px solid rgba(255, 255, 255, 0.55);
@@ -706,6 +707,54 @@ button {
   letter-spacing: 0.01em;
 }
 
+.balloon__burst {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.balloon__burst::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.15) 58%, transparent 74%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+}
+
+.balloon__shard {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 20px;
+  height: 14px;
+  border-radius: 62% 38% 48% 52% / 52% 54% 46% 48%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 16px rgba(30, 41, 59, 0.08);
+  opacity: 0;
+  transform:
+    translate3d(var(--shard-x, 0%), var(--shard-y, 0%), 0)
+    rotate(var(--shard-rotate, 0deg))
+    scale(0.7);
+}
+
+.balloon__shard--b,
+.balloon__shard--e {
+  width: 16px;
+  height: 12px;
+}
+
+.balloon__shard--c,
+.balloon__shard--f {
+  width: 18px;
+  height: 10px;
+}
+
 .balloon--blue {
   color: #ffffff;
 }
@@ -776,9 +825,23 @@ button {
   pointer-events: none;
 }
 
+.balloon.is-popped .balloon__body {
+  transition: opacity 120ms ease;
+  opacity: 0;
+}
+
 .balloon.is-popped .balloon__body::before,
 .balloon.is-popped .balloon__body::after {
   opacity: 0;
+}
+
+.balloon.is-popped .balloon__burst::before {
+  animation: balloonPopFlash 260ms ease-out forwards;
+}
+
+.balloon.is-popped .balloon__shard {
+  animation: balloonShardDrop 560ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--shard-delay, 0ms);
 }
 
 .chat-entry {

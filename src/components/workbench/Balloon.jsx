@@ -11,6 +11,15 @@ function Balloon({
   onHoverEnd,
   onActivate,
 }) {
+  const burstShards = [
+    { id: 'a', x: '-42%', y: '-10%', rotate: -28, delay: '0ms' },
+    { id: 'b', x: '-18%', y: '-22%', rotate: -8, delay: '36ms' },
+    { id: 'c', x: '8%', y: '-18%', rotate: 12, delay: '18ms' },
+    { id: 'd', x: '28%', y: '-12%', rotate: 26, delay: '54ms' },
+    { id: 'e', x: '-30%', y: '8%', rotate: -18, delay: '72ms' },
+    { id: 'f', x: '18%', y: '10%', rotate: 20, delay: '90ms' },
+  ];
+
   const positionOverrides = {
     'project-review': { x: -18, y: -14 },
     'weekly-report': { x: -6, y: -28 },
@@ -50,6 +59,21 @@ function Balloon({
           ))}
         </div>
       </div>
+
+      <span className="balloon__burst" aria-hidden="true">
+        {burstShards.map((shard) => (
+          <span
+            key={shard.id}
+            className={`balloon__shard balloon__shard--${shard.id}`}
+            style={{
+              '--shard-x': shard.x,
+              '--shard-y': shard.y,
+              '--shard-rotate': `${shard.rotate}deg`,
+              '--shard-delay': shard.delay,
+            }}
+          />
+        ))}
+      </span>
     </button>
   );
 }
