@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
-function ChatEntry({ activeTask, activationTrigger }) {
+const ChatEntry = forwardRef(function ChatEntry({ activeTask, activationTrigger }, ref) {
   const isActive = Boolean(activeTask);
   const prompt = isActive
     ? activationTrigger === 'balloon'
@@ -10,13 +10,13 @@ function ChatEntry({ activeTask, activationTrigger }) {
 
   return (
     <div className={`chat-entry ${isActive ? 'is-active' : ''}`}>
-      <div className="chat-entry__anchor" aria-hidden="true" />
+      <div ref={ref} className="chat-entry__anchor" aria-hidden="true" />
       <div className="chat-entry__content">
         <span className="chat-entry__eyebrow">AI Work Entry</span>
         <p className="chat-entry__prompt">{prompt}</p>
       </div>
     </div>
   );
-}
+});
 
 export default ChatEntry;

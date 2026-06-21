@@ -33,8 +33,16 @@ function BalloonWorkbench({
     y: '44%',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [boardMetrics, setBoardMetrics] = useState({
+    width: 1000,
+    height: 792,
+    anchorX: 500,
+    anchorY: 638,
+  });
   const modalTimerRef = useRef(null);
   const activationLockRef = useRef(false);
+  const boardRef = useRef(null);
+  const chatAnchorRef = useRef(null);
 
   const activeTask = useMemo(
     () => tasks.find((task) => task.id === activeTaskId) ?? null,
@@ -46,6 +54,59 @@ function BalloonWorkbench({
       if (modalTimerRef.current) {
         clearTimeout(modalTimerRef.current);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateMetrics = () => {
+      const boardRect = boardRef.current?.getBoundingClientRect();
+      const anchorRect = chatAnchorRef.current?.getBoundingClientRect();
+
+      if (!boardRect) {
+        return;
+      }
+
+      const nextMetrics = {
+        width: boardRect.width,
+        height: boardRect.height,
+        anchorX: anchorRect
+          ? anchorRect.left - boardRect.left + anchorRect.width / 2
+          : boardRect.width / 2,
+        anchorY: anchorRect
+          ? anchorRect.top - boardRect.top + anchorRect.height / 2
+          : boardRect.height - 154,
+      };
+
+      setBoardMetrics((prev) => {
+        const changed =
+          Math.abs(prev.width - nextMetrics.width) > 1 ||
+          Math.abs(prev.height - nextMetrics.height) > 1 ||
+          Math.abs(prev.anchorX - nextMetrics.anchorX) > 1 ||
+          Math.abs(prev.anchorY - nextMetrics.anchorY) > 1;
+
+        return changed ? nextMetrics : prev;
+      });
+    };
+
+    updateMetrics();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateMetrics();
+    });
+
+    if (boardRef.current) {
+      resizeObserver.observe(boardRef.current);
+    }
+
+    if (chatAnchorRef.current) {
+      resizeObserver.observe(chatAnchorRef.current);
+    }
+
+    window.addEventListener('resize', updateMetrics);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateMetrics);
     };
   }, []);
 
@@ -160,7 +221,7 @@ function BalloonWorkbench({
 
   return (
     <div className="balloon-workbench">
-      <div className="balloon-workbench__board">
+      <div ref={boardRef} className="balloon-workbench__board">
         <div className="balloon-workbench__surface" aria-hidden="true" />
         <div
           className="balloon-workbench__halo balloon-workbench__halo--left"
@@ -222,6 +283,14 @@ function BalloonWorkbench({
           onHoverMove={handleHoverMove}
           onHoverEnd={handleHoverEnd}
           onActivate={handleActivate}
+          boardSize={{
+            width: boardMetrics.width,
+            height: boardMetrics.height,
+          }}
+          anchorPoint={{
+            x: boardMetrics.anchorX,
+            y: boardMetrics.anchorY,
+          }}
         />
 
         <div className="balloon-workbench__balloons">
@@ -248,7 +317,11 @@ function BalloonWorkbench({
           })}
         </div>
 
-        <ChatEntry activeTask={activeTask} activationTrigger={activationTrigger} />
+        <ChatEntry
+          ref={chatAnchorRef}
+          activeTask={activeTask}
+          activationTrigger={activationTrigger}
+        />
 
         <ScissorsCursor
           visible={cursorState.visible}

@@ -7,11 +7,11 @@ const taskDetailContent = {
   'project-review': {
     summary:
       '适合项目结项、阶段复盘和团队经验沉淀场景，帮助你把零散信息整理成清晰、可汇报、可复用的复盘结构。',
-    userRole: '项目负责人、产品经理、运营负责人、需要做阶段复盘的协作者',
+    userRole: '项目负责人、产品经理、运营负责人、需要做阶段复盘的协作角色',
     useMoment: '项目收尾、阶段里程碑结束、复盘会前、需要沉淀团队经验时',
     scenarios: [
       '项目收尾后，需要整理结果、问题和后续动作',
-      '阶段复盘会上，需要快速形成一版可直接讲述的结果',
+      '阶段复盘会上，需要快速形成一版可直接讲述的结构',
       '想把一次项目经验沉淀成下次还能继续复用的方法入口',
     ],
     inputs: [
@@ -24,7 +24,7 @@ const taskDetailContent = {
     checks: ['数据是否足够支撑结论', '问题与原因是否对应', '下一步计划是否可执行'],
     suggestions: [
       '优先补齐结果数据和汇报对象，避免复盘内容空泛',
-      '如果要沉淀成模板，建议同时保留 Context Builder 的输入结果',
+      '如果要沉淀成模板，建议同时保留 Context Builder 的输入结构',
     ],
   },
   'weekly-report': {
@@ -127,11 +127,11 @@ const taskDetailContent = {
     scenarios: [
       '领导汇报前，需要快速形成 PPT 页面结构',
       '已有很多材料，但还没有清晰的叙事顺序',
-      '同一主题需要输出简版和正式版两种演示结构',
+      '同一个主题需要输出简版和正式版两种演示结构',
     ],
     inputs: [
       '汇报主题、对象和使用场景',
-      '核心结论、支撑信息和页数预期',
+      '核心结论、支持信息和页数预期',
       '已有文档、纪要或结果材料',
       '希望输出的语气和结构风格',
     ],
@@ -257,8 +257,8 @@ function TaskDetail({ task, onBack, onOpenWorkflow }) {
               ))}
             </div>
             <p className="task-detail-sidecard__copy">
-              这些 Skill 会在执行过程中作为方法提示出现，并在任务完成后沉淀到
-              Skill Records。
+              这些 Skill 会在执行过程中作为方法提示出现，并在任务完成后沉淀到 Skill
+              Records。
             </p>
           </Card>
 

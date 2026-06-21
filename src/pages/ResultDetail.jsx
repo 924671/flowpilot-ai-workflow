@@ -14,12 +14,24 @@ function ResultDetail({ result, onBack, onContinueResult, onCreateTemplate }) {
     );
   }
 
+  const versions =
+    result.generatedVersions?.length > 0
+      ? result.generatedVersions
+      : [
+          {
+            id: 'default-version',
+            name: result.versionLabel,
+            scene: '当前结果已保存为可直接查看和继续复用的正式版本。',
+            preview: result.summary,
+          },
+        ];
+
   return (
     <section className="library-page">
       <div className="library-page__header">
         <h2 className="library-page__title">Result Detail</h2>
         <p className="library-page__description">
-          查看当前结果的来源工作流、版本输出、质检结论和可继续复用的上下文结构。
+          查看当前结果的来源工作流、版本输出、质检结论，以及可继续复用的上下文结构。
         </p>
       </div>
 
@@ -67,14 +79,7 @@ function ResultDetail({ result, onBack, onContinueResult, onCreateTemplate }) {
           <section className="result-detail-card__section">
             <span className="result-detail-card__label">版本输出</span>
             <div className="result-version-list">
-              {(result.generatedVersions?.length ? result.generatedVersions : [
-                {
-                  id: 'default-version',
-                  name: result.versionLabel,
-                  scene: '当前结果已保存为可直接查看和继续复用的正式版本。',
-                  preview: result.summary,
-                },
-              ]).map((version) => (
+              {versions.map((version) => (
                 <div key={version.id} className="result-version-item">
                   <strong>{version.name}</strong>
                   <span>{version.scene}</span>

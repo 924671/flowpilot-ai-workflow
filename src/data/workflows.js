@@ -1,11 +1,30 @@
 export const workflowStepItems = [
-  { id: 'context-builder', label: 'Context Builder' },
-  { id: 'prompt-preview', label: 'Prompt Preview' },
-  { id: 'ai-output', label: 'AI Output' },
-  { id: 'output-check', label: 'Output Check' },
-  { id: 'version-optimization', label: 'Version Optimization' },
-  { id: 'save-result', label: 'Save Result' },
+  { id: 'context', label: 'Context Builder' },
+  { id: 'prompt', label: 'Prompt Preview' },
+  { id: 'output', label: 'AI Output' },
+  { id: 'check', label: 'Output Check' },
+  { id: 'version', label: 'Version Optimization' },
+  { id: 'save', label: 'Save Result' },
 ];
+
+const stepIdMap = {
+  'context-builder': 'context',
+  'prompt-preview': 'prompt',
+  'ai-output': 'output',
+  'output-check': 'check',
+  'version-optimization': 'version',
+  'save-result': 'save',
+  context: 'context',
+  prompt: 'prompt',
+  output: 'output',
+  check: 'check',
+  version: 'version',
+  save: 'save',
+};
+
+export function normalizeStepId(stepId) {
+  return stepIdMap[stepId] ?? 'context';
+}
 
 const fieldLabels = {
   projectName: '项目名称',
@@ -554,7 +573,8 @@ export function getContextFields(contextValues) {
 }
 
 export function getStepLabel(stepId) {
-  return workflowStepItems.find((step) => step.id === stepId)?.label ?? 'Context Builder';
+  const normalizedStepId = normalizeStepId(stepId);
+  return workflowStepItems.find((step) => step.id === normalizedStepId)?.label ?? 'Context Builder';
 }
 
 export function buildPromptSections(task, contextValues) {
@@ -718,7 +738,7 @@ export function createWorkflowSession(task, overrides = {}) {
   return {
     taskId: task.id,
     taskName: task.name,
-    currentStepId: overrides.currentStepId ?? workflowStepItems[0].id,
+    currentStepId: normalizeStepId(overrides.currentStepId ?? workflowStepItems[0].id),
     contextValues,
     generatedVersions: overrides.generatedVersions ?? [],
     isSaved: overrides.isSaved ?? false,
@@ -746,6 +766,7 @@ export function buildTaskTemplateEntry(record) {
 }
 
 export function buildSaveArtifacts(task, session) {
+  const normalizedStepId = normalizeStepId(session.currentStepId);
   const outputChecks = buildOutputChecks(task, session.contextValues);
   const generatedVersions = session.generatedVersions;
   const savedAtLabel = new Intl.DateTimeFormat('zh-CN', {
@@ -772,9 +793,9 @@ export function buildSaveArtifacts(task, session) {
       id: workflowId,
       taskId: task.id,
       taskName: task.name,
-      status: session.currentStepId === 'save-result' ? '已保存' : '待优化',
-      currentStepId: session.currentStepId,
-      currentStepLabel: getStepLabel(session.currentStepId),
+      status: normalizedStepId === 'save' ? '已保存' : '待优化',
+      currentStepId: normalizedStepId,
+      currentStepLabel: getStepLabel(normalizedStepId),
       contextValues: session.contextValues,
       generatedVersions,
       summary: `${session.contextValues.projectName || task.name} 已形成可继续复用的工作流记录。`,
@@ -811,8 +832,8 @@ export function buildSaveArtifacts(task, session) {
       generatedVersions,
       savedAtLabel,
       contextValues: session.contextValues,
-      currentStepId: session.currentStepId,
-      currentStepLabel: getStepLabel(session.currentStepId),
+      currentStepId: normalizedStepId,
+      currentStepLabel: getStepLabel(normalizedStepId),
       sourceType: session.sourceType,
       sourceLabel: session.sourceLabel,
       linkedWorkflowId: workflowId,
@@ -839,7 +860,7 @@ export function buildSaveArtifacts(task, session) {
           : '建议至少生成一个汇报版和一个同步版，方便后续复用。',
       contextValues: session.contextValues,
       generatedVersions,
-      currentStepId: session.currentStepId,
+      currentStepId: normalizedStepId,
       sourceType: session.sourceType,
       sourceLabel: session.sourceLabel,
       linkedWorkflowId: workflowId,

@@ -69,7 +69,7 @@ const pageDefinitions = {
   'save-success': {
     key: 'results-library',
     title: 'Save Complete',
-    description: '本次任务已经完成保存，可以继续查看结果详情或回到工作台开始下一项任务。',
+    description: '本次任务已经完成保存，可以继续查看结果详情，或回到工作台开始下一项任务。',
   },
   'skill-records': {
     key: 'skill-records',
@@ -438,7 +438,7 @@ function App() {
 
   const handleWorkflowSessionChange = (updater) => {
     setWorkflowSession((prevSession) =>
-      typeof updater === 'function' ? updater(prevSession) : updater,
+      (typeof updater === 'function' ? updater(prevSession) : updater),
     );
   };
 

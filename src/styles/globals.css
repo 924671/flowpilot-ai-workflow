@@ -578,10 +578,10 @@ button {
 
 .string-layer {
   position: absolute;
-  inset: 40px 44px 176px;
+  inset: 0;
   z-index: 2;
-  width: calc(100% - 88px);
-  height: calc(100% - 216px);
+  width: 100%;
+  height: 100%;
 }
 
 .string-layer__path {
@@ -1570,6 +1570,31 @@ button {
   background: rgba(238, 242, 255, 0.7);
 }
 
+.version-card.is-selected {
+  border-color: rgba(79, 107, 255, 0.34);
+  background: rgba(238, 242, 255, 0.96);
+  box-shadow: 0 16px 30px rgba(79, 107, 255, 0.08);
+}
+
+.version-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.version-card__status {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(79, 107, 255, 0.12);
+  color: var(--primary);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
 .version-card__title,
 .save-card__title {
   margin: 0 0 10px;
@@ -1599,6 +1624,23 @@ button {
   color: var(--primary);
   font-weight: 600;
   cursor: pointer;
+}
+
+.version-cards__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.version-cards__save-button {
+  min-width: 164px;
+}
+
+.version-cards__hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 .save-actions {
@@ -1797,6 +1839,12 @@ button {
   padding-left: 18px;
   color: var(--text-secondary);
   line-height: 1.7;
+}
+
+.execute-assist-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .button {
@@ -3816,6 +3864,503 @@ button {
 .flowpilot-record-card__footer > div {
   display: grid;
   gap: 8px;
+}
+
+/* Global spacing system */
+.page-content,
+.main-content,
+.content-shell,
+.page-shell {
+  padding: var(--space-8) var(--space-10) var(--space-12);
+}
+
+.topbar {
+  padding: 16px 40px 0;
+}
+
+.topbar__content {
+  gap: 32px;
+}
+
+.topbar__description,
+.workflow-modal__description,
+.workflow-execute-page__notice-subtext,
+.task-card__description,
+.workflow-record__summary,
+.result-record__summary,
+.membership-card__description,
+.flowpilot-task-card__body,
+.flowpilot-result-card__summary,
+.flowpilot-skill-card__description,
+.flowpilot-pricing-card__audience,
+.flowpilot-workflow-card__summary,
+.template-empty-state__description,
+.save-card__description,
+.version-card__scene,
+.execute-assist-card__list,
+.save-card__list {
+  line-height: 1.65;
+}
+
+.tag,
+.balloon__tag,
+.task-detail-card__chip,
+.workflow-modal__step-tag,
+.workflow-modal__step-state,
+.workflow-execute-page__notice-label,
+.workflow-execute-page__template-notice-badge,
+.execute-sidebar-card__eyebrow,
+.result-detail-card__eyebrow,
+.workflow-detail-card__eyebrow,
+.save-success-card__eyebrow,
+.skill-detail-card__eyebrow,
+.version-card__status,
+.workbench-page__template-badge,
+.balloon-workbench__template-badge,
+.flowpilot-status-badge,
+.flowpilot-task-card__category,
+.flowpilot-result-card__type,
+.flowpilot-pricing-card__badge {
+  min-height: 30px;
+  padding: 6px 12px;
+}
+
+.card,
+.task-card,
+.workflow-record,
+.result-record,
+.membership-card,
+.skill-section,
+.execute-sidebar-card,
+.execute-assist-card,
+.execute-panel,
+.version-card,
+.save-card,
+.output-check-card,
+.task-detail-card,
+.task-detail-sidecard,
+.template-detail-card,
+.template-compare-panel,
+.result-detail-card,
+.workflow-detail-card,
+.skill-detail-card,
+.save-success-card,
+.flowpilot-stat-card,
+.flowpilot-task-card,
+.flowpilot-result-card,
+.flowpilot-skill-card,
+.flowpilot-record-card,
+.flowpilot-pricing-card,
+.flowpilot-template-card,
+.flowpilot-workflow-card,
+.flowpilot-usage-card,
+.flowpilot-note-card,
+.workflow-modal__card {
+  padding: 28px 32px;
+}
+
+.workflow-modal__card,
+.execute-panel,
+.task-detail-page__hero,
+.execute-sidebar-card,
+.execute-assist-card {
+  padding: 32px 28px;
+}
+
+.workflow-modal__card,
+.execute-panel {
+  padding: 36px 40px;
+}
+
+.card-header,
+.task-card__header,
+.task-card__title-row,
+.workflow-record__header,
+.result-record__header,
+.execute-sidebar-card__header,
+.result-detail-card__header,
+.workflow-detail-card__header,
+.save-success-card__header,
+.template-detail-card__header,
+.template-compare-panel__header,
+.flowpilot-task-card__top,
+.flowpilot-result-card__top,
+.flowpilot-record-card__header,
+.flowpilot-pricing-card__top,
+.flowpilot-workflow-card__header,
+.workflow-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card-footer,
+.workflow-modal__actions,
+.save-actions,
+.task-card__actions,
+.task-card__actions--split,
+.flowpilot-card-actions,
+.flowpilot-task-card__actions,
+.flowpilot-result-card__actions,
+.flowpilot-template-card__actions,
+.workflow-detail-card__actions,
+.result-detail-card__actions,
+.save-success-card__actions,
+.skill-detail-card__actions,
+.button-row,
+.action-row,
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.workflow-modal__actions,
+.save-actions,
+.card-footer {
+  padding-top: 20px;
+  border-top: 1px solid rgba(230, 234, 242, 0.9);
+}
+
+.button,
+.topbar__button,
+.workflow-modal__button,
+.version-card__button,
+.workbench-page__template-action,
+.balloon-workbench__template-action {
+  min-height: 44px;
+  padding: 0 22px;
+}
+
+.workflow-execute-page {
+  gap: 20px;
+}
+
+.workflow-execute-page__notice,
+.workflow-execute-page__template-notice {
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.workflow-execute-layout {
+  gap: 24px;
+}
+
+.execute-sidebar-card {
+  padding: 32px 28px;
+}
+
+.execute-sidebar-card__header {
+  margin-bottom: 24px;
+}
+
+.workflow-steps {
+  gap: 16px;
+}
+
+.workflow-steps--navigation {
+  gap: 16px;
+}
+
+.workflow-steps__button {
+  gap: 16px;
+  padding: 14px 16px;
+}
+
+.execute-panel {
+  gap: 24px;
+}
+
+.execute-panel__header {
+  margin-bottom: 28px;
+}
+
+.execute-panel__title,
+.task-detail-page__title {
+  line-height: 1.35;
+}
+
+.execute-panel__description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.context-builder-form,
+.prompt-preview-card,
+.execute-draft,
+.output-check-grid,
+.version-cards-grid,
+.save-result-grid,
+.library-list,
+.skill-section__list,
+.flowpilot-page-grid,
+.flowpilot-stat-grid,
+.results-overview-grid,
+.membership-coverage-grid,
+.membership-faq-grid,
+.results-library-layout,
+.skill-records-layout {
+  gap: 20px;
+}
+
+.context-builder-form__field,
+.task-detail-card__meta-item,
+.flowpilot-card-section,
+.flowpilot-template-card__copy,
+.flowpilot-workflow-card__main {
+  gap: 10px;
+}
+
+.context-builder-form__input,
+.prompt-preview-card__section,
+.execute-draft__section,
+.output-check-card,
+.save-success-panel,
+.execute-assist-card__section,
+.task-card__meta,
+.result-detail-card__panel,
+.workflow-detail-card__panel,
+.result-version-item,
+.skill-detail-card__panel,
+.skill-detail-card__context,
+.skill-detail-card__skill-item,
+.flowpilot-usage-card,
+.flowpilot-note-card,
+.flowpilot-record-card__meta,
+.membership-coverage-row,
+.template-empty-state {
+  padding: 20px 24px;
+}
+
+.version-card,
+.save-card,
+.task-detail-card,
+.task-detail-sidecard,
+.result-detail-card,
+.workflow-detail-card,
+.skill-detail-card,
+.save-success-card,
+.template-detail-card,
+.template-compare-panel,
+.flowpilot-task-card,
+.flowpilot-result-card,
+.flowpilot-skill-card,
+.flowpilot-record-card,
+.flowpilot-pricing-card,
+.flowpilot-template-card,
+.flowpilot-workflow-card,
+.flowpilot-usage-card,
+.flowpilot-note-card {
+  gap: 18px;
+}
+
+.execute-assist-card {
+  padding: 32px 28px;
+}
+
+.execute-assist-card__content {
+  gap: 20px;
+}
+
+.execute-assist-card__actions {
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.task-card__tags,
+.flowpilot-task-card__tags,
+.flowpilot-result-card__tags,
+.flowpilot-template-card__tags,
+.flowpilot-workflow-card__tags,
+.task-detail-page__tags,
+.task-detail-sidecard__tags,
+.save-success-card__tags,
+.badge-row,
+.skill-tags,
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  margin-top: 16px;
+}
+
+.workflow-modal__actions {
+  justify-content: flex-end;
+}
+
+.workflow-modal__card .workflow-steps {
+  margin-top: 8px;
+}
+
+.chat-entry {
+  padding: 24px 32px 20px;
+}
+
+.workbench-page__template-summary,
+.balloon-workbench__template-overlay {
+  padding: 20px 24px;
+}
+
+.workbench-page__template-item,
+.balloon-workbench__template-item {
+  padding: 16px 18px;
+}
+
+/* Final spacing pass for library/workflow cards */
+.library-page,
+.results-page,
+.skill-records-page,
+.membership-page,
+.workflow-list-page {
+  gap: 32px;
+}
+
+.library-page__header,
+.results-page__header,
+.skill-records-page__header,
+.membership-page__header,
+.workflow-list-page__header,
+.library-group__header {
+  gap: 16px;
+}
+
+.library-group {
+  gap: 24px;
+}
+
+.library-group__title-row {
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.library-group__description {
+  max-width: 920px;
+  line-height: 1.72;
+}
+
+.flowpilot-page-grid--tasks,
+.flowpilot-page-grid--results,
+.flowpilot-page-grid--skills,
+.flowpilot-page-grid--records,
+.flowpilot-page-grid--pricing,
+.flowpilot-page-grid--templates {
+  gap: 24px;
+}
+
+.card.flowpilot-task-card,
+.card.flowpilot-result-card,
+.card.flowpilot-skill-card,
+.card.flowpilot-record-card,
+.card.flowpilot-pricing-card,
+.card.flowpilot-template-card,
+.card.flowpilot-workflow-card,
+.card.flowpilot-usage-card,
+.card.flowpilot-note-card {
+  padding: 32px 36px 30px;
+  gap: 22px;
+}
+
+.flowpilot-task-card__top,
+.flowpilot-result-card__top,
+.flowpilot-record-card__header,
+.flowpilot-pricing-card__top,
+.flowpilot-workflow-card__header {
+  gap: 24px;
+  margin-bottom: 2px;
+}
+
+.flowpilot-task-card__title,
+.flowpilot-result-card__title,
+.flowpilot-skill-card__title,
+.flowpilot-record-card__title,
+.flowpilot-pricing-card__title,
+.flowpilot-template-card__title,
+.flowpilot-workflow-card__title {
+  line-height: 1.32;
+}
+
+.flowpilot-task-card__subtitle,
+.flowpilot-result-card__subtitle,
+.flowpilot-record-card__subtitle,
+.flowpilot-workflow-card__subtitle,
+.flowpilot-template-card__description {
+  margin-top: 10px;
+  line-height: 1.68;
+}
+
+.flowpilot-task-card__category,
+.flowpilot-result-card__type,
+.flowpilot-pricing-card__badge {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.flowpilot-task-card__body,
+.flowpilot-result-card__summary,
+.flowpilot-skill-card__description,
+.flowpilot-pricing-card__audience,
+.flowpilot-workflow-card__summary {
+  line-height: 1.76;
+}
+
+.flowpilot-task-card__meta,
+.flowpilot-task-card__flow,
+.flowpilot-result-card__meta,
+.flowpilot-skill-card__meta,
+.flowpilot-skill-card__suggestion {
+  gap: 10px;
+}
+
+.flowpilot-task-card__meta p,
+.flowpilot-result-card__meta p,
+.flowpilot-skill-card__meta p,
+.flowpilot-skill-card__suggestion p,
+.flowpilot-record-card__footer p,
+.flowpilot-pricing-card__quota {
+  line-height: 1.7;
+}
+
+.flowpilot-task-card__tags,
+.flowpilot-result-card__tags,
+.flowpilot-template-card__tags,
+.flowpilot-workflow-card__tags {
+  margin-top: 4px;
+}
+
+.flowpilot-task-card__flow,
+.flowpilot-result-card__meta,
+.flowpilot-record-card__footer,
+.flowpilot-pricing-card__features,
+.flowpilot-workflow-card__meta-grid {
+  padding-top: 4px;
+}
+
+.flowpilot-task-card__actions,
+.flowpilot-result-card__actions,
+.flowpilot-template-card__actions,
+.flowpilot-workflow-card__actions,
+.flowpilot-pricing-card button {
+  margin-top: 8px;
+  padding-top: 4px;
+  gap: 16px;
+}
+
+.flowpilot-task-card__actions .button,
+.flowpilot-result-card__actions .button,
+.flowpilot-template-card__actions .button,
+.flowpilot-workflow-card__actions .button {
+  min-height: 48px;
 }
 
 @media (max-width: 1480px) {

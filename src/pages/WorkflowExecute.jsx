@@ -1,18 +1,59 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import EmptyState from '../components/common/EmptyState';
 import ContextBuilder from '../components/workflow/ContextBuilder';
 import PromptPreview from '../components/workflow/PromptPreview';
 import OutputCheck from '../components/workflow/OutputCheck';
+import SaveResult from '../components/workflow/SaveResult';
 import VersionCards from '../components/workflow/VersionCards';
 import WorkflowSteps from '../components/workflow/WorkflowSteps';
-import { getTemplateSourceBadge } from '../data/templateEntries';
 import {
   buildAiOutputDraft,
   buildGeneratedVersion,
   buildOutputChecks,
   buildPromptSections,
   getVersionCatalog,
+  normalizeStepId,
   workflowStepItems,
 } from '../data/workflows';
+
+const versionPreviewMeta = {
+  'leader-report': {
+    title: '领导汇报版',
+    summary:
+      '本版本围绕项目目标、执行结果、关键问题和下一步计划进行整理，适合作为管理层同步材料。',
+    suggestions: ['补充关键数据', '明确风险优先级', '提炼下一步动作'],
+  },
+  'team-sync': {
+    title: '团队同步版',
+    summary:
+      '本版本突出当前进展、责任分工、待办事项和风险点，适合团队例会和执行同步。',
+    suggestions: ['明确责任人', '补齐待办节点', '同步阻塞事项'],
+  },
+  'ppt-outline': {
+    title: 'PPT 大纲版',
+    summary:
+      '本版本整理为背景、目标、过程、结果、问题、下一步六页结构，便于继续扩展成汇报页面。',
+    suggestions: ['确认页数节奏', '提炼每页结论', '补充图表位置'],
+  },
+  'summary-300': {
+    title: '300 字摘要版',
+    summary:
+      '本版本压缩为简洁摘要，保留关键结果和下一步计划，适合快速同步和确认。',
+    suggestions: ['压缩非核心描述', '保留关键数字', '突出下一步计划'],
+  },
+  'formal-report': {
+    title: '正式报告版',
+    summary:
+      '本版本使用更完整、更正式的报告表达结构，适合归档、提交或正式评审。',
+    suggestions: ['统一章节标题', '完善证据支撑', '检查正式措辞'],
+  },
+  'email-notice': {
+    title: '邮件通知版',
+    summary:
+      '本版本转换为邮件格式，包含主题、正文、重点事项和后续安排，适合会后同步和正式分发。',
+    suggestions: ['补齐邮件主题', '精简正文段落', '明确后续安排'],
+  },
+};
 
 function WorkflowExecute({
   task,
@@ -24,11 +65,16 @@ function WorkflowExecute({
   onShowSaveSuccess,
   onNavigate,
 }) {
+  const generatedVersions = Array.isArray(session.generatedVersions)
+    ? session.generatedVersions
+    : [];
   const [saveMessage, setSaveMessage] = useState('');
-
-  const currentStepIndex = workflowStepItems.findIndex(
-    (step) => step.id === session.currentStepId,
+  const activeStep = normalizeStepId(session.currentStepId);
+  const [selectedVersionId, setSelectedVersionId] = useState(
+    generatedVersions[0]?.id ?? '',
   );
+
+  const currentStepIndex = workflowStepItems.findIndex((step) => step.id === activeStep);
 
   const promptSections = useMemo(
     () => buildPromptSections(task, session.contextValues),
@@ -44,9 +90,49 @@ function WorkflowExecute({
   );
   const versionCatalog = useMemo(() => getVersionCatalog(), []);
 
+  useEffect(() => {
+    if (!generatedVersions.length) {
+      setSelectedVersionId('');
+      return;
+    }
+
+    if (!generatedVersions.some((item) => item.id === selectedVersionId)) {
+      setSelectedVersionId(generatedVersions[0].id);
+    }
+  }, [generatedVersions, selectedVersionId]);
+
+  const selectedVersion = useMemo(() => {
+    if (!generatedVersions.length) {
+      return null;
+    }
+
+    return generatedVersions.find((item) => item.id === selectedVersionId) ?? generatedVersions[0];
+  }, [generatedVersions, selectedVersionId]);
+
+  const versionPreview = useMemo(() => {
+    if (!selectedVersion) {
+      return null;
+    }
+
+    const baseVersion = versionCatalog.find((item) => item.id === selectedVersion.id);
+    const meta = versionPreviewMeta[selectedVersion.id];
+
+    if (!baseVersion || !meta) {
+      return null;
+    }
+
+    return {
+      name: meta.title,
+      scene: baseVersion.scene,
+      summary: meta.summary,
+      generatedSummary: selectedVersion.preview,
+      suggestions: meta.suggestions,
+    };
+  }, [selectedVersion, versionCatalog]);
+
   const sidebarContent = useMemo(() => {
-    switch (session.currentStepId) {
-      case 'context-builder':
+    switch (activeStep) {
+      case 'context':
         return {
           title: 'Context Expression',
           blocks: [
@@ -58,7 +144,7 @@ function WorkflowExecute({
             },
           ],
         };
-      case 'prompt-preview':
+      case 'prompt':
         return {
           title: 'Prompt Structure',
           blocks: [
@@ -69,7 +155,7 @@ function WorkflowExecute({
             },
           ],
         };
-      case 'ai-output':
+      case 'output':
         return {
           title: '下一步建议',
           blocks: [
@@ -79,7 +165,7 @@ function WorkflowExecute({
             },
           ],
         };
-      case 'output-check':
+      case 'check':
         return {
           title: 'Output Check',
           blocks: [
@@ -90,32 +176,54 @@ function WorkflowExecute({
             },
           ],
         };
-      case 'version-optimization':
+      case 'version':
+        if (versionPreview) {
+          return {
+            title: '当前版本预览',
+            blocks: [
+              { heading: `版本名称：${versionPreview.name}`, items: [] },
+              { heading: `适用场景：${versionPreview.scene}`, items: [] },
+              { heading: '内容摘要', items: [versionPreview.summary, versionPreview.generatedSummary] },
+              { heading: '建议', items: versionPreview.suggestions },
+            ],
+          };
+        }
+
         return {
-          title: 'Version Optimization',
+          title: '当前版本预览',
           blocks: [
             {
-              heading: '优化方向',
-              items: ['面向领导的汇报版', '面向团队的同步版', '面向展示的 PPT 大纲版'],
+              heading: '预览提示',
+              items: ['先点击某个版本的“生成版本”，右侧会显示对应预览内容。'],
+            },
+          ],
+        };
+      case 'save':
+        return {
+          title: 'Save Result',
+          blocks: [
+            {
+              heading: '保存建议',
+              items: [
+                '保存前建议检查版本名称',
+                '结果保存后可在 Results Library 中复用',
+                '方法记录会同步进入 Skill Records',
+              ],
             },
           ],
         };
       default:
         return {
-          title: 'Skill Records',
+          title: 'Step Notice',
           blocks: [
             {
-              heading: '记录方式',
-              items: [
-                '使用了 Context Expression：补充了目标、对象和限制条件',
-                '使用了 Output Check：发现输出缺少数据支撑',
-                '使用了 Version Optimization：生成了领导汇报版和团队同步版',
-              ],
+              heading: '当前步骤',
+              items: ['当前步骤暂未配置，请返回上一步。'],
             },
           ],
         };
     }
-  }, [session.currentStepId]);
+  }, [activeStep, versionPreview]);
 
   const handleFieldChange = (fieldKey, value) => {
     setSaveMessage('');
@@ -131,15 +239,21 @@ function WorkflowExecute({
   };
 
   const handleStepChange = (stepId) => {
+    setSaveMessage('');
     onSessionChange((prevSession) => ({
       ...prevSession,
-      currentStepId: stepId,
+      currentStepId: normalizeStepId(stepId),
     }));
   };
 
   const handleGenerateVersion = (versionId) => {
     setSaveMessage('');
+    setSelectedVersionId(versionId);
+
     onSessionChange((prevSession) => {
+      const previousVersions = Array.isArray(prevSession.generatedVersions)
+        ? prevSession.generatedVersions
+        : [];
       const generatedVersion = buildGeneratedVersion(
         task,
         prevSession.contextValues,
@@ -150,13 +264,11 @@ function WorkflowExecute({
         return prevSession;
       }
 
-      const nextVersions = prevSession.generatedVersions.some(
-        (item) => item.id === versionId,
-      )
-        ? prevSession.generatedVersions.map((item) =>
+      const nextVersions = previousVersions.some((item) => item.id === versionId)
+        ? previousVersions.map((item) =>
             item.id === versionId ? generatedVersion : item,
           )
-        : [...prevSession.generatedVersions, generatedVersion];
+        : [...previousVersions, generatedVersion];
 
       return {
         ...prevSession,
@@ -194,9 +306,16 @@ function WorkflowExecute({
     );
   };
 
+  const handleGoToSave = () => {
+    onSessionChange((prevSession) => ({
+      ...prevSession,
+      currentStepId: normalizeStepId('save'),
+    }));
+  };
+
   const renderMainPanel = () => {
-    switch (session.currentStepId) {
-      case 'context-builder':
+    switch (activeStep) {
+      case 'context':
         return (
           <ContextBuilder
             task={task}
@@ -204,9 +323,9 @@ function WorkflowExecute({
             onFieldChange={handleFieldChange}
           />
         );
-      case 'prompt-preview':
+      case 'prompt':
         return <PromptPreview task={task} promptSections={promptSections} />;
-      case 'ai-output':
+      case 'output':
         return (
           <section className="execute-panel">
             <div className="execute-panel__header">
@@ -223,117 +342,38 @@ function WorkflowExecute({
             </div>
           </section>
         );
-      case 'output-check':
+      case 'check':
         return <OutputCheck checkItems={outputChecks} />;
-      case 'version-optimization':
+      case 'version':
         return (
           <VersionCards
             versions={versionCatalog}
-            generatedVersions={session.generatedVersions}
+            generatedVersions={generatedVersions}
+            selectedVersionId={selectedVersion?.id ?? ''}
             onGenerateVersion={handleGenerateVersion}
+            onSelectVersion={setSelectedVersionId}
+            onGoToSave={handleGoToSave}
+          />
+        );
+      case 'save':
+        return (
+          <SaveResult
+            outputChecks={outputChecks}
+            generatedVersions={generatedVersions}
+            saveMessage={saveMessage}
+            activeTemplate={activeTemplate}
+            onSaveAll={handleSaveAll}
+            onCreateTemplate={handleCreateTemplate}
+            onNavigate={onNavigate}
           />
         );
       default:
         return (
-          <section className="execute-panel">
-            <div className="execute-panel__header">
-              <span className="execute-panel__eyebrow">Save Result</span>
-              <h3 className="execute-panel__title">保存和记录</h3>
-            </div>
-
-            {activeTemplate && (
-              <div className="template-session-card">
-                <div className="template-session-card__header">
-                  <span className="template-session-card__badge">
-                    {getTemplateSourceBadge(activeTemplate)}
-                  </span>
-                  <h4 className="template-session-card__title">当前会话来自模板回填</h4>
-                </div>
-                <p className="template-session-card__description">
-                  你现在使用的是“{activeTemplate.title}”，来源于
-                  {activeTemplate.sourceLabel}。可以直接更新当前模板，也可以另存为一个新模板入口。
-                </p>
-                <div className="template-session-card__meta">
-                  <span>最近使用：{activeTemplate.lastUsedAtLabel || '刚刚回填'}</span>
-                  <span>使用次数：{activeTemplate.usageCount || 0}</span>
-                </div>
-              </div>
-            )}
-
-            <div className="save-result-grid">
-              <article className="save-card">
-                <h4 className="save-card__title">保存到 Results Library</h4>
-                <p className="save-card__description">
-                  保存当前输出结果、质检摘要和已生成版本，便于后续对比和复用。
-                </p>
-              </article>
-
-              <article className="save-card">
-                <h4 className="save-card__title">保存到 My Workflows</h4>
-                <p className="save-card__description">
-                  将本次上下文、Prompt 结构和版本结果沉淀为可继续使用的工作流。
-                </p>
-              </article>
-
-              <article className="save-card save-card--records">
-                <h4 className="save-card__title">记录到 Skill Records</h4>
-                <ul className="save-card__list">
-                  <li>使用了 Context Expression：补充了目标、对象和限制条件</li>
-                  <li>
-                    使用了 Output Check：
-                    {outputChecks
-                      .filter((item) => item.status !== '充分')
-                      .map((item) => item.label)
-                      .join('、') || '确认结果已经具备较好的提交基础'}
-                  </li>
-                  <li>
-                    使用了 Version Optimization：
-                    {session.generatedVersions.length > 0
-                      ? `生成了${session.generatedVersions.map((item) => item.name).join('、')}`
-                      : '当前还没有额外版本'}
-                  </li>
-                </ul>
-              </article>
-            </div>
-
-            <div className="save-actions">
-              <Button className="workflow-modal__button workflow-modal__button--primary" onClick={handleSaveAll}>
-                保存本次结果
-              </Button>
-              <Button
-                variant="ghost"
-                className="workflow-modal__button workflow-modal__button--ghost"
-                onClick={() => handleCreateTemplate(activeTemplate ? 'auto' : 'new')}
-              >
-                {activeTemplate ? '更新当前模板' : '保存为模板入口'}
-              </Button>
-              {activeTemplate && (
-                <Button
-                  variant="ghost"
-                  className="workflow-modal__button workflow-modal__button--ghost"
-                  onClick={() => handleCreateTemplate('new')}
-                >
-                  另存为新模板
-                </Button>
-              )}
-              <Button
-                variant="ghost"
-                className="workflow-modal__button workflow-modal__button--ghost"
-                onClick={() => onNavigate?.('results-library')}
-              >
-                查看 Results Library
-              </Button>
-              <Button
-                variant="ghost"
-                className="workflow-modal__button workflow-modal__button--ghost"
-                onClick={() => onNavigate?.('skill-records')}
-              >
-                查看 Skill Records
-              </Button>
-            </div>
-
-            {saveMessage && <p className="save-feedback">{saveMessage}</p>}
-          </section>
+          <EmptyState
+            compact
+            title="当前步骤暂未配置"
+            description="请返回上一步，或重新选择工作流步骤。"
+          />
         );
     }
   };
@@ -369,7 +409,7 @@ function WorkflowExecute({
             </div>
             <WorkflowSteps
               steps={workflowStepItems}
-              currentStepId={session.currentStepId}
+              currentStepId={activeStep}
               onStepChange={handleStepChange}
               completedStepIndex={currentStepIndex - 1}
               variant="navigation"
@@ -386,13 +426,33 @@ function WorkflowExecute({
               {sidebarContent.blocks.map((block) => (
                 <section key={block.heading} className="execute-assist-card__section">
                   <h4 className="execute-assist-card__heading">{block.heading}</h4>
-                  <ul className="execute-assist-card__list">
-                    {block.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  {block.items.length > 0 ? (
+                    <ul className="execute-assist-card__list">
+                      {block.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </section>
               ))}
+              {activeStep === 'version' && versionPreview && (
+                <div className="execute-assist-card__actions">
+                  <button
+                    type="button"
+                    className="button button--ghost"
+                    onClick={() => setSelectedVersionId(versionPreview ? selectedVersion.id : '')}
+                  >
+                    继续优化
+                  </button>
+                  <button
+                    type="button"
+                    className="button button--primary"
+                    onClick={handleGoToSave}
+                  >
+                    进入 Save Result
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </aside>

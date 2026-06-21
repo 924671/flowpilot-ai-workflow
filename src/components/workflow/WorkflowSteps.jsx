@@ -1,12 +1,12 @@
 import React from 'react';
 
 const defaultStepLabels = [
-  { id: 'context-builder', label: '\u8865\u5145\u4e0a\u4e0b\u6587' },
-  { id: 'prompt-preview', label: '\u751f\u6210 Prompt' },
-  { id: 'ai-output', label: 'AI \u8f93\u51fa\u521d\u7a3f' },
-  { id: 'output-check', label: 'Output Check' },
-  { id: 'version-optimization', label: '\u7248\u672c\u4f18\u5316' },
-  { id: 'save-result', label: '\u4fdd\u5b58\u5de5\u4f5c\u6d41' },
+  { id: 'context', label: 'Context Builder' },
+  { id: 'prompt', label: 'Prompt Preview' },
+  { id: 'output', label: 'AI Output' },
+  { id: 'check', label: 'Output Check' },
+  { id: 'version', label: 'Version Optimization' },
+  { id: 'save', label: 'Save Result' },
 ];
 
 function WorkflowSteps({

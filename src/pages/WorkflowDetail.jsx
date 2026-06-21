@@ -9,7 +9,7 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
     return (
       <EmptyState
         title="还没有可查看的工作流详情"
-        description="请先从 My Workflows 里选择一条记录，再查看它停留在哪一步、用了哪些方法，以及如何继续编辑。"
+        description="请先从 My Workflows 里选择一条记录，再查看它停留在哪一步、用过哪些方法，以及如何继续编辑。"
       />
     );
   }
