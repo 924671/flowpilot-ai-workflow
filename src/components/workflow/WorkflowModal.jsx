@@ -1,10 +1,15 @@
 import React from 'react';
 import WorkflowSteps from './WorkflowSteps';
 
-function WorkflowModal({ task, open, onReset, onEnterWorkflow }) {
+function WorkflowModal({ task, open, activationTrigger, onReset, onEnterWorkflow }) {
   if (!open || !task) {
     return null;
   }
+
+  const description =
+    activationTrigger === 'balloon'
+      ? '气球已被戳破，正在把这个任务切换为对应 AI 工作流。'
+      : '任务线已被剪断，正在把这个任务切换为对应 AI 工作流。';
 
   return (
     <div
@@ -20,9 +25,7 @@ function WorkflowModal({ task, open, onReset, onEnterWorkflow }) {
           <h3 id="workflow-modal-title" className="workflow-modal__title">
             {task.name} 工作流
           </h3>
-          <p className="workflow-modal__description">
-            任务已释放，进入对应 AI 工作流。
-          </p>
+          <p className="workflow-modal__description">{description}</p>
         </div>
 
         <WorkflowSteps />

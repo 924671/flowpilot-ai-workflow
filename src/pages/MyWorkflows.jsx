@@ -1,78 +1,43 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import EmptyState from '../components/common/EmptyState';
 import Tag from '../components/common/Tag';
+import EmptyState from '../components/common/EmptyState';
 
-function MyWorkflows({ workflows, onOpenWorkflow }) {
-  const [searchValue, setSearchValue] = useState('');
-  const [filterKey, setFilterKey] = useState('all');
-  const [selectedWorkflowId, setSelectedWorkflowId] = useState(workflows[0]?.id ?? '');
+const statusOrder = ['全部', '进行中', '已保存', '待优化'];
 
-  const stats = useMemo(() => {
-    const totalVersions = workflows.reduce(
-      (count, item) => count + (item.generatedVersions?.length ?? 0),
-      0,
-    );
-    const completedCount = workflows.filter(
-      (item) => item.currentStepId === 'save-result',
-    ).length;
+const statusClassMap = {
+  进行中: 'is-progress',
+  已保存: 'is-saved',
+  待优化: 'is-refine',
+};
 
-    return {
-      total: workflows.length,
-      totalVersions,
-      completedCount,
-    };
-  }, [workflows]);
+function MyWorkflows({ workflows, onOpenWorkflow, onOpenWorkflowDetail }) {
+  const [activeStatus, setActiveStatus] = useState('全部');
 
   const visibleWorkflows = useMemo(() => {
-    const keyword = searchValue.trim().toLowerCase();
+    if (activeStatus === '全部') {
+      return workflows;
+    }
 
-    return workflows.filter((workflow) => {
-      const haystack = [
-        workflow.taskName,
-        workflow.summary,
-        workflow.currentStepLabel,
-        workflow.sourceLabel,
-        workflow.contextValues?.projectName,
-        ...(workflow.generatedVersions ?? []).map((item) => item.name),
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
+    return workflows.filter((workflow) => workflow.status === activeStatus);
+  }, [activeStatus, workflows]);
 
-      const matchesSearch = keyword ? haystack.includes(keyword) : true;
-      const matchesFilter =
-        filterKey === 'all'
-          ? true
-          : filterKey === 'save-result'
-            ? workflow.currentStepId === 'save-result'
-            : workflow.currentStepId !== 'save-result';
-
-      return matchesSearch && matchesFilter;
-    });
-  }, [filterKey, searchValue, workflows]);
-
-  const selectedWorkflow = useMemo(
-    () =>
-      visibleWorkflows.find((item) => item.id === selectedWorkflowId) ??
-      visibleWorkflows[0] ??
-      workflows[0] ??
-      null,
-    [selectedWorkflowId, visibleWorkflows, workflows],
+  const stats = useMemo(
+    () => ({
+      inProgress: 3,
+      saved: 8,
+      optimizable: 5,
+      weeklyNew: 4,
+    }),
+    [],
   );
 
-  useEffect(() => {
-    if (selectedWorkflow) {
-      setSelectedWorkflowId(selectedWorkflow.id);
-    }
-  }, [selectedWorkflow?.id]);
-
-  if (workflows.length === 0) {
+  if (!workflows.length) {
     return (
       <EmptyState
-        title="还没有沉淀下来的工作流"
-        description="先完成一次真实任务，再把可复用的方法结构保存到这里。"
+        title="还没有工作流记录"
+        description="从 Workbench 或 Task Library 开始一个任务后，这里会出现可继续编辑的流程。"
       />
     );
   }
@@ -82,7 +47,7 @@ function MyWorkflows({ workflows, onOpenWorkflow }) {
       <div className="library-page__header">
         <h2 className="library-page__title">我的工作流</h2>
         <p className="library-page__description">
-          每条记录都保留了上次保存时所在的步骤、上下文和已生成版本，你可以从这里直接恢复并继续编辑。
+          查看正在推进、已保存和可继续优化的 AI 工作流。
         </p>
       </div>
 
@@ -91,224 +56,130 @@ function MyWorkflows({ workflows, onOpenWorkflow }) {
           <div className="library-group__header">
             <div className="library-group__title-row">
               <h3 className="library-group__title">流程总览</h3>
-              <span className="library-group__pill">继续编辑</span>
+              <span className="library-group__pill">恢复详情 + 继续编辑</span>
             </div>
             <p className="library-group__description">
-              这里沉淀的是一次次真实任务执行后的流程记录，而不是单次聊天历史。
+              每条记录都会保留来源任务、停留步骤、关键上下文和最近一次保存状态。
             </p>
           </div>
 
-          <div className="results-overview-grid">
-            <Card className="results-overview-card">
-              <span className="results-overview-card__label">已保存流程</span>
-              <strong className="results-overview-card__value">{stats.total}</strong>
-              <p className="results-overview-card__note">
-                每条都可恢复到上次停留的步骤继续处理。
+          <div className="flowpilot-stat-grid">
+            <Card className="flowpilot-stat-card">
+              <span className="flowpilot-stat-card__label">进行中</span>
+              <strong className="flowpilot-stat-card__value">{stats.inProgress}</strong>
+              <p className="flowpilot-stat-card__note">
+                还在补上下文、检查输出或生成版本的流程。
               </p>
             </Card>
-
-            <Card className="results-overview-card">
-              <span className="results-overview-card__label">已生成版本</span>
-              <strong className="results-overview-card__value">
-                {stats.totalVersions}
-              </strong>
-              <p className="results-overview-card__note">
-                包含汇报版、同步版、PPT 大纲版等扩写结果。
+            <Card className="flowpilot-stat-card">
+              <span className="flowpilot-stat-card__label">已保存</span>
+              <strong className="flowpilot-stat-card__value">{stats.saved}</strong>
+              <p className="flowpilot-stat-card__note">
+                已经沉淀，可以从当前结构继续回看和复用。
               </p>
             </Card>
-
-            <Card className="results-overview-card">
-              <span className="results-overview-card__label">已走完整链路</span>
-              <strong className="results-overview-card__value">
-                {stats.completedCount}
-              </strong>
-              <p className="results-overview-card__note">
-                这些记录已经完成保存，可继续回填优化。
+            <Card className="flowpilot-stat-card">
+              <span className="flowpilot-stat-card__label">待优化</span>
+              <strong className="flowpilot-stat-card__value">{stats.optimizable}</strong>
+              <p className="flowpilot-stat-card__note">
+                已有初稿或结果，但还值得补更多版本和结论。
+              </p>
+            </Card>
+            <Card className="flowpilot-stat-card">
+              <span className="flowpilot-stat-card__label">本周新增</span>
+              <strong className="flowpilot-stat-card__value">{stats.weeklyNew}</strong>
+              <p className="flowpilot-stat-card__note">
+                本周新增的流程沉淀和可继续处理的记录数量。
               </p>
             </Card>
           </div>
+        </section>
 
-          <div className="library-group__toolbar">
-            <div className="library-group__toolbar-copy">
-              <strong>{visibleWorkflows.length} 条流程记录</strong>
-              <span>支持搜索任务名称、项目名、停留步骤与来源。</span>
+        <section className="library-group">
+          <div className="library-group__header">
+            <div className="library-group__title-row">
+              <h3 className="library-group__title">流程记录</h3>
+              <span className="library-group__pill library-group__pill--soft">
+                当前显示 {visibleWorkflows.length} 条
+              </span>
             </div>
-
-            <div className="results-filter-tabs">
-              <button
-                type="button"
-                className={`template-filters__tab ${filterKey === 'all' ? 'is-active' : ''}`}
-                onClick={() => setFilterKey('all')}
-              >
-                全部
-              </button>
-              <button
-                type="button"
-                className={`template-filters__tab ${filterKey === 'save-result' ? 'is-active' : ''}`}
-                onClick={() => setFilterKey('save-result')}
-              >
-                已完成保存
-              </button>
-              <button
-                type="button"
-                className={`template-filters__tab ${filterKey === 'in-progress' ? 'is-active' : ''}`}
-                onClick={() => setFilterKey('in-progress')}
-              >
-                处理中
-              </button>
-            </div>
+            <p className="library-group__description">
+              优先展示这条流程目前停在什么步骤、适合从哪里继续，以及已经用过哪些 Skill。
+            </p>
           </div>
 
-          <div className="template-filters">
-            <div className="template-filters__tabs">
-              <Tag>恢复上下文</Tag>
-              <Tag>继续优化</Tag>
-              <Tag>延续版本</Tag>
-            </div>
-
-            <label className="template-filters__search">
-              <span>搜索流程</span>
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
-                placeholder="搜索任务名、项目名、停留步骤或来源"
-              />
-            </label>
+          <div className="flowpilot-filter-row">
+            {statusOrder.map((status) => (
+              <button
+                key={status}
+                type="button"
+                className={`flowpilot-filter-chip ${
+                  activeStatus === status ? 'is-active' : ''
+                }`}
+                onClick={() => setActiveStatus(status)}
+              >
+                {status}
+              </button>
+            ))}
           </div>
 
-          {visibleWorkflows.length === 0 ? (
-            <Card className="template-empty-state">
-              <h4 className="template-empty-state__title">没有符合条件的流程记录</h4>
-              <p className="template-empty-state__description">
-                可以切换筛选或清空搜索词后重新查看。
-              </p>
-            </Card>
-          ) : (
-            <div className="results-library-layout">
-              <div className="results-library-layout__list">
-                {visibleWorkflows.map((workflow) => {
-                  const isSelected = selectedWorkflow?.id === workflow.id;
+          <div className="flowpilot-stack-list">
+            {visibleWorkflows.map((workflow) => (
+              <Card
+                key={workflow.id}
+                className="flowpilot-workflow-card flowpilot-workflow-card--refined"
+              >
+                <div className="flowpilot-card-kicker">
+                  <span className="flowpilot-card-kicker__label">Workflow Resume</span>
+                  <span
+                    className={`flowpilot-status-badge ${
+                      statusClassMap[workflow.status] || ''
+                    }`}
+                  >
+                    {workflow.status}
+                  </span>
+                </div>
 
-                  return (
-                    <Card
-                      key={workflow.id}
-                      className={`workflow-record workflow-record--selected-${isSelected ? 'yes' : 'no'} ${isSelected ? 'workflow-record--selected' : ''}`}
-                    >
-                      <button
-                        type="button"
-                        className="workflow-record__surface"
-                        onClick={() => setSelectedWorkflowId(workflow.id)}
-                      >
-                        <div className="workflow-record__main">
-                          <div>
-                            <h3 className="workflow-record__title">{workflow.taskName}</h3>
-                            <p className="workflow-record__summary">{workflow.summary}</p>
-                            <p className="workflow-record__hint">
-                              上次停留：{workflow.currentStepLabel} · {workflow.sourceLabel}
-                            </p>
-                          </div>
+                <div className="flowpilot-card-heading">
+                  <div>
+                    <h3 className="flowpilot-workflow-card__title">{workflow.taskName}</h3>
+                    <p className="flowpilot-workflow-card__subtitle">{workflow.summary}</p>
+                  </div>
+                </div>
 
-                          <div className="workflow-record__meta">
-                            <span>{workflow.savedAtLabel}</span>
-                            <span>{workflow.generatedVersions.length} 个版本输出</span>
-                          </div>
-                        </div>
+                <div className="flowpilot-workflow-card__meta-grid">
+                  <div>
+                    <span>当前停留</span>
+                    <strong>{workflow.currentStepLabel}</strong>
+                  </div>
+                  <div>
+                    <span>最近保存</span>
+                    <strong>{workflow.savedAtLabel}</strong>
+                  </div>
+                  <div>
+                    <span>来源入口</span>
+                    <strong>{workflow.sourceLabel}</strong>
+                  </div>
+                </div>
 
-                        <div className="workflow-record__tags">
-                          <Tag>{workflow.currentStepLabel}</Tag>
-                          {(workflow.generatedVersions ?? []).slice(0, 3).map((version) => (
-                            <Tag key={version.id}>{version.name}</Tag>
-                          ))}
-                        </div>
-                      </button>
+                <div className="flowpilot-card-section">
+                  <span className="flowpilot-card-section__label">已使用的 Skill</span>
+                  <div className="flowpilot-workflow-card__tags">
+                    {(workflow.skillTags ?? []).map((tag) => (
+                      <Tag key={tag}>{tag}</Tag>
+                    ))}
+                  </div>
+                </div>
 
-                      <div className="workflow-record__actions">
-                        <Button onClick={() => onOpenWorkflow?.(workflow)}>
-                          继续编辑
-                        </Button>
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-
-              <aside className="results-library-layout__detail">
-                {selectedWorkflow && (
-                  <Card className="workflow-detail-card">
-                    <div className="workflow-detail-card__header">
-                      <div>
-                        <span className="workflow-detail-card__eyebrow">
-                          Workflow Resume
-                        </span>
-                        <h3 className="workflow-detail-card__title">
-                          {selectedWorkflow.taskName}
-                        </h3>
-                      </div>
-                      <Tag>{selectedWorkflow.currentStepLabel}</Tag>
-                    </div>
-
-                    <p className="workflow-detail-card__description">
-                      这条流程记录保留了当前任务的上下文、扩写版本和上次停留位置，可以直接恢复继续推进。
-                    </p>
-
-                    <div className="workflow-detail-card__section">
-                      <span className="workflow-detail-card__label">恢复信息</span>
-                      <div className="workflow-detail-card__meta">
-                        <span>项目名称：{selectedWorkflow.contextValues?.projectName}</span>
-                        <span>停留步骤：{selectedWorkflow.currentStepLabel}</span>
-                        <span>保存时间：{selectedWorkflow.savedAtLabel}</span>
-                        <span>来源：{selectedWorkflow.sourceLabel}</span>
-                      </div>
-                    </div>
-
-                    <div className="workflow-detail-card__section">
-                      <span className="workflow-detail-card__label">流程摘要</span>
-                      <div className="workflow-detail-card__panel">
-                        <p>{selectedWorkflow.summary}</p>
-                      </div>
-                    </div>
-
-                    <div className="workflow-detail-card__section">
-                      <span className="workflow-detail-card__label">当前上下文</span>
-                      <div className="workflow-detail-card__context">
-                        <p>
-                          <strong>任务目标：</strong>
-                          {selectedWorkflow.contextValues?.taskGoal}
-                        </p>
-                        <p>
-                          <strong>数据结果：</strong>
-                          {selectedWorkflow.contextValues?.dataResults}
-                        </p>
-                        <p>
-                          <strong>下一步计划：</strong>
-                          {selectedWorkflow.contextValues?.nextPlan}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="workflow-detail-card__section">
-                      <span className="workflow-detail-card__label">已沉淀版本</span>
-                      <div className="result-version-list">
-                        {(selectedWorkflow.generatedVersions ?? []).map((version) => (
-                          <div key={version.id} className="result-version-item">
-                            <strong>{version.name}</strong>
-                            <span>{version.scene}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="workflow-detail-card__actions">
-                      <Button onClick={() => onOpenWorkflow?.(selectedWorkflow)}>
-                        从这里继续编辑
-                      </Button>
-                    </div>
-                  </Card>
-                )}
-              </aside>
-            </div>
-          )}
+                <div className="flowpilot-card-actions">
+                  <Button onClick={() => onOpenWorkflow?.(workflow)}>继续编辑</Button>
+                  <Button variant="ghost" onClick={() => onOpenWorkflowDetail?.(workflow.id)}>
+                    查看详情
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
         </section>
       </div>
     </section>

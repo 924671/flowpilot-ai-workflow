@@ -1,15 +1,137 @@
 import React from 'react';
 import Card from '../components/common/Card';
-import Tag from '../components/common/Tag';
 import Button from '../components/common/Button';
+
+const planOverview = [
+  {
+    label: '核心定位',
+    value: '工作流工具',
+    note: '围绕真实任务入口、上下文构建、结果质检和方法沉淀展开。',
+  },
+  {
+    label: '重点能力',
+    value: '结果沉淀',
+    note: '支持多版本输出、Skill Records 复盘和模板回填恢复。',
+  },
+  {
+    label: '适用对象',
+    value: 'AI 新手职场者',
+    note: '适合需要快速把真实工作任务接入 AI，但缺少稳定方法结构的人。',
+  },
+];
+
+const plans = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: '¥0 / 月',
+    audience: '刚开始把 AI 用在真实任务中的个人用户',
+    quota: '每月 12 次工作流 / 20 条结果保存',
+    features: [
+      '6 个高频任务入口',
+      '基础 Context Builder 与 Prompt Preview',
+      '基础结果保存与 Skill Records 记录',
+    ],
+    note: '适合先把任务入口、上下文补全和基础输出流程跑顺。',
+    action: '当前方案',
+    featured: false,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: '¥49 / 月',
+    audience: '高频处理汇报、方案、纪要和分析任务的个人用户',
+    quota: '每月 80 次工作流 / 200 条结果保存',
+    features: [
+      '多版本生成与继续编辑',
+      'Skill Records 深度复盘',
+      '自定义工作流模板与模板回填恢复',
+    ],
+    note: '适合把一次性任务逐步沉淀成稳定的个人工作方法。',
+    action: '推荐方案',
+    featured: true,
+  },
+  {
+    id: 'team',
+    name: 'Team',
+    price: '¥149 / 月',
+    audience: '需要共享方法模板、统一输出结构的小团队',
+    quota: '每月 300 次工作流 / 团队共享结果库',
+    features: [
+      '团队共享模板入口',
+      '统一版本输出口径',
+      '共享 Skill Records 和可复用建议',
+    ],
+    note: '强调方法复用和协作口径统一，而不是做成重型后台系统。',
+    action: '适合团队试用',
+    featured: false,
+  },
+];
+
+const capabilityGroups = [
+  {
+    title: '任务进入与上下文构建',
+    description: '从高频工作任务开始，而不是从空白聊天框开始。',
+    coverage: {
+      free: '支持',
+      pro: '支持',
+      team: '支持',
+    },
+  },
+  {
+    title: '结果保存与继续编辑',
+    description: '支持把进行中的流程和已生成结果继续回填、恢复和扩写。',
+    coverage: {
+      free: '基础保存',
+      pro: '完整支持',
+      team: '完整支持',
+    },
+  },
+  {
+    title: '模板沉淀与模板回流',
+    description: '把上下文结构、版本输出和 Skill 记录反向沉淀为下次入口。',
+    coverage: {
+      free: '不强调',
+      pro: '支持',
+      team: '重点能力',
+    },
+  },
+  {
+    title: 'Skill Records 方法复盘',
+    description: '记录真实任务中使用过的方法，帮助用户持续优化工作方式。',
+    coverage: {
+      free: '支持',
+      pro: '支持',
+      team: '支持',
+    },
+  },
+];
+
+const faqs = [
+  {
+    question: '为什么 Membership 不是等级页？',
+    answer:
+      'FlowPilot 的 Membership 用来说明不同方案覆盖的能力范围，而不是构建等级、积分或成长体系。',
+  },
+  {
+    question: 'Pro 和 Team 的差别是什么？',
+    answer:
+      'Pro 更关注个人高频复用，Team 更强调团队内部共享模板、统一输出结构和方法沉淀口径。',
+  },
+  {
+    question: '这页会接入支付或注册吗？',
+    answer:
+      '当前原型阶段不接入真实支付、登录或权限控制，这一页只展示商业化结构和能力层级。',
+  },
+];
 
 function Membership() {
   return (
     <section className="library-page">
       <div className="library-page__header">
-        <h2 className="library-page__title">Membership</h2>
+        <h2 className="library-page__title">会员方案</h2>
         <p className="library-page__description">
-          按照不同使用强度与协作场景，展示 FlowPilot 的能力覆盖范围，帮助用户理解从个人使用到团队沉淀的适配方式。
+          升级后获得更多工作流额度、版本生成和结果沉淀能力。
         </p>
       </div>
 
@@ -17,147 +139,76 @@ function Membership() {
         <section className="library-group">
           <div className="library-group__header">
             <div className="library-group__title-row">
-              <h3 className="library-group__title">方案总览</h3>
-              <span className="library-group__pill">静态展示页</span>
+              <h3 className="library-group__title">方案概览</h3>
+              <span className="library-group__pill">非等级体系</span>
             </div>
             <p className="library-group__description">
-              这里展示的是不同方案的能力范围，不涉及等级成长、积分奖励或游戏化机制。
+              这里展示的是能力覆盖和适用场景，不包含等级、积分、徽章或任何游戏化成长机制。
             </p>
           </div>
 
           <div className="results-overview-grid">
-            <Card className="results-overview-card">
-              <span className="results-overview-card__label">适合个人</span>
-              <strong className="results-overview-card__value">高频任务</strong>
-              <p className="results-overview-card__note">
-                从真实工作任务进入，逐步沉淀自己的上下文结构、Prompt 写法和结果版本。
-              </p>
-            </Card>
-
-            <Card className="results-overview-card">
-              <span className="results-overview-card__label">适合团队</span>
-              <strong className="results-overview-card__value">方法统一</strong>
-              <p className="results-overview-card__note">
-                统一模板入口、质检标准和结果输出口径，减少重复试错。
-              </p>
-            </Card>
-
-            <Card className="results-overview-card">
-              <span className="results-overview-card__label">核心价值</span>
-              <strong className="results-overview-card__value">复用沉淀</strong>
-              <p className="results-overview-card__note">
-                让一次性的 AI 使用过程，变成可以继续编辑、恢复回填和反向建模的工作资产。
-              </p>
-            </Card>
+            {planOverview.map((item) => (
+              <Card key={item.label} className="results-overview-card">
+                <span className="results-overview-card__label">{item.label}</span>
+                <strong className="results-overview-card__value">{item.value}</strong>
+                <p className="results-overview-card__note">{item.note}</p>
+              </Card>
+            ))}
           </div>
         </section>
 
         <section className="library-group">
           <div className="library-group__header">
             <div className="library-group__title-row">
-              <h3 className="library-group__title">方案对比</h3>
-              <span className="library-group__pill">按场景选择</span>
+              <h3 className="library-group__title">方案选择</h3>
+              <span className="library-group__pill library-group__pill--soft">
+                浅色专业风格
+              </span>
             </div>
             <p className="library-group__description">
-              当前版本先用静态方案卡说明产品覆盖范围，方便在原型阶段验证信息结构与购买心智。
+              页面重点展示商业化结构和能力差异，不做高饱和销售感，也不引入支付流程。
             </p>
           </div>
 
-          <div className="library-grid">
-            <Card className="membership-card">
-              <div className="task-card__title-row">
-                <h3 className="membership-card__title">Starter</h3>
-                <Tag>个人起步</Tag>
-              </div>
-              <p className="membership-card__description">
-                适合刚开始用 AI 处理真实工作的用户，重点覆盖任务入口、Context Builder、Prompt 预览和基础保存。
-              </p>
-              <div className="task-card__meta">
-                <span className="task-card__meta-label">包含能力</span>
-                <p className="task-card__meta-text">
-                  六个任务入口、结构化 Prompt、基础结果保存、Skill 使用记录。
-                </p>
-              </div>
-              <div className="task-card__tags">
-                <Tag>Workbench</Tag>
-                <Tag>Prompt Preview</Tag>
-                <Tag>Skill Records</Tag>
-              </div>
-              <div className="task-card__actions">
-                <Button variant="ghost">查看方案</Button>
-              </div>
-            </Card>
+          <div className="flowpilot-page-grid flowpilot-page-grid--pricing">
+            {plans.map((plan) => (
+              <Card
+                key={plan.id}
+                className={`flowpilot-pricing-card ${plan.featured ? 'is-featured' : ''}`}
+              >
+                <div className="flowpilot-pricing-card__top">
+                  <div>
+                    <h3 className="flowpilot-pricing-card__title">{plan.name}</h3>
+                    <p className="flowpilot-pricing-card__price">{plan.price}</p>
+                  </div>
+                  {plan.featured && <span className="flowpilot-pricing-card__badge">Pro</span>}
+                </div>
 
-            <Card className="membership-card">
-              <div className="task-card__title-row">
-                <h3 className="membership-card__title">Professional</h3>
-                <Tag>当前推荐</Tag>
-              </div>
-              <p className="membership-card__description">
-                适合需要持续保存 workflow、result 和模板入口的个人高频用户，强调继续编辑、版本扩写和方法沉淀。
-              </p>
-              <div className="task-card__meta">
-                <span className="task-card__meta-label">包含能力</span>
-                <p className="task-card__meta-text">
-                  本地持久化、回填恢复、结果扩写、多版本输出、模板管理与反向创建任务入口。
-                </p>
-              </div>
-              <div className="task-card__tags">
-                <Tag>My Workflows</Tag>
-                <Tag>Results Library</Tag>
-                <Tag>Template Entry</Tag>
-              </div>
-              <div className="task-card__actions">
-                <Button>当前推荐</Button>
-              </div>
-            </Card>
+                <div className="flowpilot-pricing-card__block">
+                  <span className="flowpilot-pricing-card__label">适合人群</span>
+                  <p className="flowpilot-pricing-card__audience">{plan.audience}</p>
+                </div>
 
-            <Card className="membership-card">
-              <div className="task-card__title-row">
-                <h3 className="membership-card__title">Team</h3>
-                <Tag>协作沉淀</Tag>
-              </div>
-              <p className="membership-card__description">
-                适合希望统一方法口径、共享模板结构和沉淀复用建议的小团队场景。
-              </p>
-              <div className="task-card__meta">
-                <span className="task-card__meta-label">包含能力</span>
-                <p className="task-card__meta-text">
-                  团队模板入口、统一输出结构、常见问题复盘视图和可复用建议库。
-                </p>
-              </div>
-              <div className="task-card__tags">
-                <Tag>Template Manager</Tag>
-                <Tag>Reusable Suggestions</Tag>
-                <Tag>Skill Review</Tag>
-              </div>
-              <div className="task-card__actions">
-                <Button variant="ghost">查看方案</Button>
-              </div>
-            </Card>
+                <div className="flowpilot-pricing-card__block">
+                  <span className="flowpilot-pricing-card__label">使用额度</span>
+                  <p className="flowpilot-pricing-card__quota">{plan.quota}</p>
+                </div>
 
-            <Card className="membership-card">
-              <div className="task-card__title-row">
-                <h3 className="membership-card__title">Enterprise Preview</h3>
-                <Tag>预留能力</Tag>
-              </div>
-              <p className="membership-card__description">
-                预留给更复杂的组织级场景，用于后续扩展审批链路、部门模板库和更细分的任务结构。
-              </p>
-              <div className="task-card__meta">
-                <span className="task-card__meta-label">当前阶段说明</span>
-                <p className="task-card__meta-text">
-                  这一版只保留信息架构占位，不接入账号体系、后台服务或真实权限控制。
-                </p>
-              </div>
-              <div className="task-card__tags">
-                <Tag>Prototype Scope</Tag>
-                <Tag>Future Expansion</Tag>
-              </div>
-              <div className="task-card__actions">
-                <Button variant="ghost">了解边界</Button>
-              </div>
-            </Card>
+                <div className="flowpilot-pricing-card__block">
+                  <span className="flowpilot-pricing-card__label">功能列表</span>
+                  <ul className="flowpilot-pricing-card__features">
+                    {plan.features.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <p className="flowpilot-pricing-card__note">{plan.note}</p>
+
+                <Button variant={plan.featured ? 'primary' : 'ghost'}>{plan.action}</Button>
+              </Card>
+            ))}
           </div>
         </section>
 
@@ -165,41 +216,57 @@ function Membership() {
           <div className="library-group__header">
             <div className="library-group__title-row">
               <h3 className="library-group__title">能力覆盖</h3>
-              <span className="library-group__pill">对应产品流程</span>
+              <span className="library-group__pill library-group__pill--soft">
+                对应产品流程
+              </span>
             </div>
             <p className="library-group__description">
-              所有方案都围绕同一条工作链路展开，只是在保存深度、模板能力和协作场景上有所区别。
+              三档方案都围绕同一条工作流链路，只是在沉淀深度、模板能力和共享范围上有所差异。
             </p>
           </div>
 
-          <div className="library-grid">
-            <Card className="membership-card">
-              <h3 className="membership-card__title">任务入口与上下文构建</h3>
-              <p className="membership-card__description">
-                从项目复盘、周报、方案、纪要、竞品和 PPT 大纲切入，再补全目标、对象、背景和限制条件。
-              </p>
-            </Card>
+          <div className="membership-coverage-grid">
+            {capabilityGroups.map((group) => (
+              <Card key={group.title} className="membership-card membership-card--coverage">
+                <h3 className="membership-card__title">{group.title}</h3>
+                <p className="membership-card__description">{group.description}</p>
 
-            <Card className="membership-card">
-              <h3 className="membership-card__title">结构化 Prompt 与输出质检</h3>
-              <p className="membership-card__description">
-                用固定结构组织 Prompt，并在输出后检查具体度、数据支撑、对象匹配和下一步计划。
-              </p>
-            </Card>
+                <div className="membership-coverage-list">
+                  <div className="membership-coverage-row">
+                    <strong>Free</strong>
+                    <span>{group.coverage.free}</span>
+                  </div>
+                  <div className="membership-coverage-row">
+                    <strong>Pro</strong>
+                    <span>{group.coverage.pro}</span>
+                  </div>
+                  <div className="membership-coverage-row">
+                    <strong>Team</strong>
+                    <span>{group.coverage.team}</span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
 
-            <Card className="membership-card">
-              <h3 className="membership-card__title">多版本优化与结果沉淀</h3>
-              <p className="membership-card__description">
-                将一份结果扩写成领导汇报版、团队同步版、PPT 大纲版或邮件通知版，并保存到结果库。
-              </p>
-            </Card>
+        <section className="library-group">
+          <div className="library-group__header">
+            <div className="library-group__title-row">
+              <h3 className="library-group__title">常见问题</h3>
+              <span className="library-group__pill library-group__pill--soft">
+                页面边界说明
+              </span>
+            </div>
+          </div>
 
-            <Card className="membership-card">
-              <h3 className="membership-card__title">Skill Records 与模板回流</h3>
-              <p className="membership-card__description">
-                把验证过的方法记录下来，再反向沉淀成下次可直接进入 Workbench 的模板入口。
-              </p>
-            </Card>
+          <div className="membership-faq-grid">
+            {faqs.map((item) => (
+              <Card key={item.question} className="membership-card membership-card--faq">
+                <h3 className="membership-card__title">{item.question}</h3>
+                <p className="membership-card__description">{item.answer}</p>
+              </Card>
+            ))}
           </div>
         </section>
       </div>

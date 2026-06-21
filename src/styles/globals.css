@@ -573,11 +573,13 @@ button {
 .balloon-workbench__balloons {
   position: absolute;
   inset: 40px 0 122px;
+  z-index: 4;
 }
 
 .string-layer {
   position: absolute;
   inset: 40px 44px 176px;
+  z-index: 2;
   width: calc(100% - 88px);
   height: calc(100% - 216px);
 }
@@ -607,7 +609,8 @@ button {
   fill: none;
   stroke: transparent;
   stroke-width: 24;
-  cursor: pointer;
+  pointer-events: stroke;
+  cursor: none;
 }
 
 .string-layer__hit.is-disabled {
@@ -616,19 +619,23 @@ button {
 
 .balloon {
   position: absolute;
+  z-index: 5;
   width: 154px;
   animation: balloonFloat 7s ease-in-out infinite;
   padding: 0;
   border: 0;
   background: transparent;
   text-align: left;
-  cursor: pointer;
+  cursor: none;
+  touch-action: none;
+  will-change: transform, opacity;
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .balloon__body {
   position: relative;
   z-index: 2;
+  transform-origin: center center;
   min-height: 190px;
   padding: 28px 18px 16px;
   border: 1px solid rgba(255, 255, 255, 0.55);
@@ -717,46 +724,101 @@ button {
 .balloon__burst::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 44%;
+  left: var(--burst-x, 50%);
+  top: var(--burst-y, 44%);
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.15) 58%, transparent 74%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.2) 52%, transparent 74%);
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.4);
 }
 
+.balloon__burst::after {
+  content: "";
+  position: absolute;
+  left: var(--burst-x, 50%);
+  top: var(--burst-y, 44%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(17, 24, 39, 0.72) 0, rgba(17, 24, 39, 0.62) 42%, rgba(255, 255, 255, 0.1) 44%, transparent 74%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.2);
+}
+
+.balloon__burst {
+  --crack-one-rotate: -18deg;
+  --crack-two-rotate: 24deg;
+}
+
+.balloon__burst > .balloon__shard:first-child::before,
+.balloon__burst > .balloon__shard:first-child::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--burst-x, 50%) - var(--shard-x, 0%));
+  top: calc(var(--burst-y, 44%) - var(--shard-y, 0%));
+  width: 26px;
+  height: 1.5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(var(--crack-one-rotate)) scaleX(0.3);
+  transform-origin: center;
+}
+
+.balloon__burst > .balloon__shard:first-child::after {
+  width: 18px;
+  background: rgba(255, 255, 255, 0.58);
+  transform: translate(-50%, -50%) rotate(var(--crack-two-rotate)) scaleX(0.25);
+}
+
 .balloon__shard {
   position: absolute;
-  left: 50%;
-  top: 48%;
-  width: 20px;
-  height: 14px;
-  border-radius: 62% 38% 48% 52% / 52% 54% 46% 48%;
-  background: rgba(255, 255, 255, 0.92);
+  left: var(--burst-x, 50%);
+  top: var(--burst-y, 44%);
+  width: 22px;
+  height: 15px;
+  border-radius: 72% 28% 64% 36% / 40% 62% 38% 60%;
+  background: var(--balloon-fragment-fill, rgba(255, 255, 255, 0.92));
+  border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow: 0 8px 16px rgba(30, 41, 59, 0.08);
+  filter: blur(0.1px);
   opacity: 0;
   transform:
-    translate3d(var(--shard-x, 0%), var(--shard-y, 0%), 0)
+    translate3d(var(--shard-x, 0), var(--shard-y, 0), 0)
     rotate(var(--shard-rotate, 0deg))
     scale(0.7);
 }
 
 .balloon__shard--b,
-.balloon__shard--e {
-  width: 16px;
+.balloon__shard--e,
+.balloon__shard--f,
+.balloon__shard--sm {
+  width: 18px;
   height: 12px;
 }
 
 .balloon__shard--c,
-.balloon__shard--f {
-  width: 18px;
-  height: 10px;
+.balloon__shard--g,
+.balloon__shard--md {
+  width: 22px;
+  height: 14px;
+}
+
+.balloon__shard--lg {
+  width: 26px;
+  height: 17px;
+}
+
+.balloon__shard--xl {
+  width: 30px;
+  height: 20px;
 }
 
 .balloon--blue {
   color: #ffffff;
+  --balloon-fragment-fill: linear-gradient(145deg, #5c76ff, #9bb0ff);
 }
 
 .balloon--blue .balloon__body {
@@ -765,6 +827,7 @@ button {
 
 .balloon--green {
   color: #ffffff;
+  --balloon-fragment-fill: linear-gradient(145deg, #2bb37a, #7ce0b3);
 }
 
 .balloon--green .balloon__body {
@@ -773,6 +836,7 @@ button {
 
 .balloon--orange {
   color: #ffffff;
+  --balloon-fragment-fill: linear-gradient(145deg, #f5ab20, #ffd184);
 }
 
 .balloon--orange .balloon__body {
@@ -781,6 +845,7 @@ button {
 
 .balloon--purple {
   color: #ffffff;
+  --balloon-fragment-fill: linear-gradient(145deg, #8767ff, #c0adff);
 }
 
 .balloon--purple .balloon__body {
@@ -789,6 +854,7 @@ button {
 
 .balloon--pink {
   color: #ffffff;
+  --balloon-fragment-fill: linear-gradient(145deg, #f47a96, #ffb1c0);
 }
 
 .balloon--pink .balloon__body {
@@ -797,6 +863,7 @@ button {
 
 .balloon--slate {
   color: #ffffff;
+  --balloon-fragment-fill: linear-gradient(145deg, #425268, #77879c);
 }
 
 .balloon--slate .balloon__body {
@@ -821,13 +888,22 @@ button {
 }
 
 .balloon.is-popped {
-  animation: balloonPop 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: none;
   pointer-events: none;
 }
 
 .balloon.is-popped .balloon__body {
-  transition: opacity 120ms ease;
+  animation: balloonPop 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.balloon.is-popped .balloon__subtitle,
+.balloon.is-popped .balloon__title,
+.balloon.is-popped .balloon__tags {
   opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
 }
 
 .balloon.is-popped .balloon__body::before,
@@ -839,8 +915,17 @@ button {
   animation: balloonPopFlash 260ms ease-out forwards;
 }
 
+.balloon.is-popped .balloon__burst::after {
+  animation: balloonPunctureMark 240ms ease-out forwards;
+}
+
+.balloon.is-popped .balloon__burst > .balloon__shard:first-child::before,
+.balloon.is-popped .balloon__burst > .balloon__shard:first-child::after {
+  animation: balloonPunctureCrack 260ms ease-out forwards;
+}
+
 .balloon.is-popped .balloon__shard {
-  animation: balloonShardDrop 560ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: balloonShardBurst 620ms cubic-bezier(0.12, 0.82, 0.18, 1) forwards;
   animation-delay: var(--shard-delay, 0ms);
 }
 
@@ -965,9 +1050,11 @@ button {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #ffffff;
+  background: #ff6b81;
   transform: translateX(-50%);
-  box-shadow: inset -1px -1px 0 rgba(23, 32, 51, 0.14);
+  box-shadow:
+    inset -1px -1px 0 rgba(23, 32, 51, 0.14),
+    0 0 0 2px rgba(255, 255, 255, 0.16);
 }
 
 .scissors-cursor__pin-shaft {
@@ -1528,6 +1615,94 @@ button {
   line-height: 1.6;
 }
 
+.save-success-card {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+}
+
+.save-success-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.save-success-card__eyebrow {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(34, 160, 107, 0.12);
+  color: #21855d;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.save-success-card__title {
+  margin: 10px 0 0;
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+.save-success-card__description {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.save-success-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.save-success-panel {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(249, 250, 253, 0.92);
+}
+
+.save-success-panel strong {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.save-success-panel p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.save-success-card__section {
+  display: grid;
+  gap: 10px;
+}
+
+.save-success-card__label {
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.save-success-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.save-success-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .save-card--records {
   grid-column: 1 / -1;
 }
@@ -1724,6 +1899,195 @@ button {
 }
 
 .library-page__description {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.task-detail-page {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.task-detail-page__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 8px 4px 0;
+}
+
+.task-detail-page__hero-copy {
+  max-width: 760px;
+  display: grid;
+  gap: 10px;
+}
+
+.task-detail-page__eyebrow {
+  min-height: 26px;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(79, 107, 255, 0.12);
+  color: var(--primary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.task-detail-page__title {
+  margin: 0;
+  color: var(--text);
+  font-size: 2.4rem;
+  line-height: 1.15;
+}
+
+.task-detail-page__subtitle {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.task-detail-page__description {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.task-detail-page__tags,
+.task-detail-sidecard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.task-detail-page__hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.task-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.task-detail-layout__main,
+.task-detail-layout__aside {
+  display: grid;
+  gap: 16px;
+}
+
+.task-detail-card,
+.task-detail-sidecard {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+}
+
+.task-detail-card__title,
+.task-detail-sidecard__title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.08rem;
+}
+
+.task-detail-card__list,
+.task-detail-sidecard__notes {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.task-detail-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.task-detail-card__meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.task-detail-card__meta-item {
+  display: grid;
+  gap: 8px;
+  padding: 16px 16px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(249, 250, 253, 0.92);
+}
+
+.task-detail-card__meta-item span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.task-detail-card__meta-item p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.task-detail-card__chip {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(79, 107, 255, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.task-detail-sidecard__steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task-detail-sidecard__steps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(249, 250, 253, 0.92);
+  border: 1px solid var(--border);
+}
+
+.task-detail-sidecard__steps span {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.task-detail-sidecard__steps strong {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.task-detail-sidecard__copy {
   margin: 0;
   color: var(--text-secondary);
   line-height: 1.7;
@@ -2457,6 +2821,69 @@ button {
   flex-wrap: wrap;
 }
 
+.membership-card {
+  display: grid;
+  gap: 14px;
+}
+
+.membership-card--featured {
+  border-color: rgba(79, 107, 255, 0.28);
+  box-shadow: 0 18px 40px rgba(79, 107, 255, 0.12);
+  background: linear-gradient(180deg, rgba(238, 242, 255, 0.88), rgba(255, 255, 255, 0.92));
+}
+
+.membership-card--coverage,
+.membership-card--faq {
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.membership-card__feature-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.membership-card__note {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.membership-coverage-grid,
+.membership-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.membership-coverage-list {
+  display: grid;
+  gap: 10px;
+}
+
+.membership-coverage-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(249, 250, 253, 0.92);
+  border: 1px solid var(--border);
+}
+
+.membership-coverage-row strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.membership-coverage-row span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
 .results-overview-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2901,4 +3328,524 @@ button {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.flowpilot-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.flowpilot-filter-chip {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.flowpilot-filter-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(79, 107, 255, 0.28);
+}
+
+.flowpilot-filter-chip.is-active {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: rgba(79, 107, 255, 0.18);
+}
+
+.flowpilot-toolbar {
+  display: grid;
+  gap: 18px;
+}
+
+.flowpilot-toolbar--inline {
+  align-items: end;
+}
+
+.flowpilot-search {
+  display: grid;
+  gap: 8px;
+  max-width: 360px;
+}
+
+.flowpilot-search span {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.flowpilot-search input {
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--text);
+  outline: none;
+}
+
+.flowpilot-search input:focus {
+  border-color: rgba(79, 107, 255, 0.3);
+  box-shadow: 0 0 0 4px rgba(79, 107, 255, 0.08);
+}
+
+.flowpilot-page-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.flowpilot-page-grid--tasks,
+.flowpilot-page-grid--results,
+.flowpilot-page-grid--skills,
+.flowpilot-page-grid--records,
+.flowpilot-page-grid--pricing {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.flowpilot-page-grid--templates {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.flowpilot-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.flowpilot-stat-card,
+.flowpilot-task-card,
+.flowpilot-result-card,
+.flowpilot-skill-card,
+.flowpilot-record-card,
+.flowpilot-pricing-card,
+.flowpilot-template-card,
+.flowpilot-workflow-card,
+.flowpilot-usage-card,
+.flowpilot-note-card {
+  border-radius: 24px;
+  border: 1px solid rgba(230, 234, 242, 0.96);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 40px rgba(30, 41, 59, 0.06);
+}
+
+.flowpilot-workflow-card--refined,
+.flowpilot-result-card--refined,
+.flowpilot-record-card--refined,
+.flowpilot-skill-card--refined {
+  gap: 18px;
+}
+
+.flowpilot-card-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.flowpilot-card-kicker__label,
+.flowpilot-card-kicker__time {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.flowpilot-card-kicker__label {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flowpilot-card-heading {
+  display: grid;
+  gap: 8px;
+}
+
+.flowpilot-card-section {
+  display: grid;
+  gap: 10px;
+}
+
+.flowpilot-card-section__label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.flowpilot-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flowpilot-stat-card {
+  display: grid;
+  gap: 10px;
+}
+
+.flowpilot-stat-card__label,
+.flowpilot-task-card__meta span,
+.flowpilot-task-card__flow span,
+.flowpilot-result-card__meta span,
+.flowpilot-skill-card__meta span,
+.flowpilot-skill-card__suggestion span,
+.flowpilot-record-card__footer span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.flowpilot-stat-card__value {
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.flowpilot-stat-card__note {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.flowpilot-task-card,
+.flowpilot-result-card,
+.flowpilot-skill-card,
+.flowpilot-record-card,
+.flowpilot-pricing-card,
+.flowpilot-template-card,
+.flowpilot-workflow-card {
+  display: grid;
+  gap: 16px;
+}
+
+.flowpilot-task-card__top,
+.flowpilot-result-card__top,
+.flowpilot-record-card__header,
+.flowpilot-pricing-card__top,
+.flowpilot-workflow-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.flowpilot-task-card__title,
+.flowpilot-result-card__title,
+.flowpilot-skill-card__title,
+.flowpilot-record-card__title,
+.flowpilot-pricing-card__title,
+.flowpilot-template-card__title,
+.flowpilot-workflow-card__title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.flowpilot-task-card__subtitle,
+.flowpilot-result-card__subtitle,
+.flowpilot-record-card__subtitle,
+.flowpilot-workflow-card__subtitle,
+.flowpilot-template-card__description {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.flowpilot-task-card__category,
+.flowpilot-result-card__type,
+.flowpilot-pricing-card__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.flowpilot-pricing-card__badge {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.flowpilot-task-card__body,
+.flowpilot-result-card__summary,
+.flowpilot-skill-card__description,
+.flowpilot-pricing-card__audience,
+.flowpilot-workflow-card__summary {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.72;
+}
+
+.flowpilot-task-card__meta,
+.flowpilot-task-card__flow,
+.flowpilot-result-card__meta,
+.flowpilot-skill-card__meta,
+.flowpilot-skill-card__suggestion {
+  display: grid;
+  gap: 6px;
+}
+
+.flowpilot-task-card__meta p,
+.flowpilot-result-card__meta p,
+.flowpilot-skill-card__meta p,
+.flowpilot-skill-card__suggestion p,
+.flowpilot-record-card__footer p,
+.flowpilot-pricing-card__quota {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.flowpilot-task-card__tags,
+.flowpilot-result-card__tags,
+.flowpilot-template-card__tags,
+.flowpilot-workflow-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.flowpilot-task-card__flow strong,
+.flowpilot-workflow-card__meta-grid strong {
+  color: var(--text);
+}
+
+.flowpilot-task-card__actions,
+.flowpilot-result-card__actions,
+.flowpilot-template-card__actions,
+.flowpilot-pricing-card button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flowpilot-template-card__copy {
+  display: grid;
+  gap: 10px;
+}
+
+.flowpilot-stack-list,
+.flowpilot-usage-list,
+.flowpilot-note-list {
+  display: grid;
+  gap: 18px;
+}
+
+.flowpilot-workflow-card {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.flowpilot-workflow-card--refined {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.flowpilot-workflow-card__main {
+  display: grid;
+  gap: 14px;
+}
+
+.flowpilot-workflow-card__meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.flowpilot-workflow-card__meta-grid div {
+  display: grid;
+  gap: 6px;
+}
+
+.flowpilot-workflow-card__meta-grid span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.flowpilot-workflow-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flowpilot-status-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.flowpilot-status-badge.is-progress {
+  background: rgba(79, 107, 255, 0.12);
+  color: var(--primary);
+}
+
+.flowpilot-status-badge.is-saved {
+  background: rgba(34, 160, 107, 0.14);
+  color: #20875f;
+}
+
+.flowpilot-status-badge.is-refine {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b87406;
+}
+
+.flowpilot-status-badge--进行中 {
+  background: rgba(79, 107, 255, 0.12);
+  color: var(--primary);
+}
+
+.flowpilot-status-badge--已保存 {
+  background: rgba(34, 160, 107, 0.14);
+  color: #20875f;
+}
+
+.flowpilot-status-badge--待优化 {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b87406;
+}
+
+.flowpilot-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.flowpilot-usage-card__text,
+.flowpilot-note-card p,
+.flowpilot-record-card__bullets p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.flowpilot-usage-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.flowpilot-usage-card--timeline,
+.flowpilot-note-card--issue {
+  position: relative;
+  padding-left: 20px;
+}
+
+.flowpilot-usage-card--timeline::before,
+.flowpilot-note-card--issue::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(79, 107, 255, 0.52), rgba(79, 107, 255, 0.08));
+}
+
+.flowpilot-record-card__bullets,
+.flowpilot-pricing-card__features {
+  display: grid;
+  gap: 10px;
+}
+
+.flowpilot-pricing-card {
+  align-content: start;
+}
+
+.flowpilot-pricing-card.is-featured {
+  border-color: rgba(79, 107, 255, 0.2);
+  box-shadow: 0 24px 48px rgba(79, 107, 255, 0.1);
+}
+
+.flowpilot-pricing-card__price {
+  margin: 8px 0 0;
+  color: var(--primary);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.flowpilot-pricing-card__block {
+  display: grid;
+  gap: 8px;
+}
+
+.flowpilot-pricing-card__label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.flowpilot-pricing-card__features {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.flowpilot-pricing-card__note {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.68;
+}
+
+.flowpilot-record-card__footer {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.flowpilot-record-card__footer > div {
+  display: grid;
+  gap: 8px;
+}
+
+@media (max-width: 1480px) {
+  .task-detail-card__meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flowpilot-stat-grid,
+  .flowpilot-workflow-card__meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flowpilot-page-grid--templates,
+  .flowpilot-page-grid--tasks,
+  .flowpilot-page-grid--results,
+  .flowpilot-page-grid--skills,
+  .flowpilot-page-grid--records,
+  .flowpilot-page-grid--pricing,
+  .flowpilot-two-column,
+  .save-success-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flowpilot-workflow-card {
+    grid-template-columns: 1fr;
+  }
+
+  .flowpilot-workflow-card__actions,
+  .flowpilot-record-card__footer {
+    flex-direction: row;
+    align-items: center;
+  }
 }

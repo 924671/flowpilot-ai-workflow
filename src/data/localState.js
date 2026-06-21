@@ -6,7 +6,7 @@ import {
 } from './workflows';
 import { buildTemplateFromSkillRecord, sortTemplates } from './templateEntries';
 
-const STORAGE_KEY = 'flowpilot.app.state.v1';
+const STORAGE_KEY = 'flowpilot.app.state.v3';
 
 function getDefaultTemplates() {
   return sortTemplates(

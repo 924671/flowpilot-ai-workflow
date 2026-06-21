@@ -3,9 +3,13 @@ import PageShell from './components/layout/PageShell';
 import Workbench from './pages/Workbench';
 import WorkflowExecute from './pages/WorkflowExecute';
 import TaskLibrary from './pages/TaskLibrary';
+import TaskDetail from './pages/TaskDetail';
 import MyWorkflows from './pages/MyWorkflows';
 import ResultsLibrary from './pages/ResultsLibrary';
-import MethodArchive from './pages/MethodArchive';
+import ResultDetail from './pages/ResultDetail';
+import WorkflowDetail from './pages/WorkflowDetail';
+import SaveSuccess from './pages/SaveSuccess';
+import SkillRecords from './pages/SkillRecords';
 import Membership from './pages/Membership';
 import tasks from './data/tasks';
 import { buildSaveArtifacts, createWorkflowSession } from './data/workflows';
@@ -35,34 +39,59 @@ const pageDefinitions = {
   'task-library': {
     key: 'task-library',
     title: 'Task Library',
-    description: '浏览任务入口，并管理已经沉淀下来的模板入口。',
+    description: '从真实工作场景中选择任务，并查看可直接复用的模板入口。',
+  },
+  'task-detail': {
+    key: 'task-library',
+    title: 'Task Detail',
+    description: '查看任务说明、适用场景、输入要求和推荐 Skill。',
   },
   'my-workflows': {
     key: 'my-workflows',
     title: 'My Workflows',
-    description: '继续处理已开始的工作流，并从上次保存步骤继续编辑。',
+    description: '查看正在推进、已保存和可继续优化的 AI 工作流。',
+  },
+  'workflow-detail': {
+    key: 'my-workflows',
+    title: 'Workflow Detail',
+    description: '查看这条工作流当前停在哪一步、保留了哪些上下文，以及如何继续编辑。',
   },
   'results-library': {
     key: 'results-library',
     title: 'Results Library',
-    description: '从已保存结果继续生成新版本，也可以反向沉淀成模板入口。',
+    description: '沉淀已完成的报告、方案、纪要和多版本输出。',
+  },
+  'result-detail': {
+    key: 'results-library',
+    title: 'Result Detail',
+    description: '查看当前结果的来源、版本输出、质检结论和后续复用入口。',
+  },
+  'save-success': {
+    key: 'results-library',
+    title: 'Save Complete',
+    description: '本次任务已经完成保存，可以继续查看结果详情或回到工作台开始下一项任务。',
   },
   'skill-records': {
     key: 'skill-records',
     title: 'Skill Records',
-    description: '把真实任务中的方法记录反向沉淀为可复用的模板入口。',
+    description: '记录真实任务里用过的方法，而不是等级或积分。',
   },
   membership: {
     key: 'membership',
     title: 'Membership',
-    description: '查看不同方案的能力覆盖范围与适用场景。',
+    description: '查看不同方案在工作流额度、版本输出和结果沉淀上的差异。',
   },
 };
 
 function App() {
   const initialState = useMemo(() => loadAppState(tasks), []);
+  const initialView = ['result-detail', 'workflow-detail', 'save-success'].includes(
+    initialState.currentView,
+  )
+    ? 'workbench'
+    : initialState.currentView;
 
-  const [currentView, setCurrentView] = useState(initialState.currentView);
+  const [currentView, setCurrentView] = useState(initialView);
   const [activeTaskId, setActiveTaskId] = useState(initialState.activeTaskId);
   const [workflowSession, setWorkflowSession] = useState(initialState.workflowSession);
   const [savedWorkflows, setSavedWorkflows] = useState(initialState.savedWorkflows);
@@ -71,6 +100,9 @@ function App() {
   const [taskEntryTemplates, setTaskEntryTemplates] = useState(
     initialState.taskEntryTemplates,
   );
+  const [activeResultId, setActiveResultId] = useState('');
+  const [activeWorkflowRecordId, setActiveWorkflowRecordId] = useState('');
+  const [latestSaveBundle, setLatestSaveBundle] = useState(null);
 
   const activeTask = useMemo(
     () => tasks.find((task) => task.id === activeTaskId) ?? tasks[0],
@@ -80,10 +112,19 @@ function App() {
   const activeTemplate = useMemo(
     () =>
       workflowSession?.linkedTemplateId
-        ? taskEntryTemplates.find((item) => item.id === workflowSession.linkedTemplateId) ??
-          null
+        ? taskEntryTemplates.find((item) => item.id === workflowSession.linkedTemplateId) ?? null
         : null,
     [taskEntryTemplates, workflowSession?.linkedTemplateId],
+  );
+
+  const activeResult = useMemo(
+    () => savedResults.find((item) => item.id === activeResultId) ?? null,
+    [activeResultId, savedResults],
+  );
+
+  const activeWorkflowRecord = useMemo(
+    () => savedWorkflows.find((item) => item.id === activeWorkflowRecordId) ?? null,
+    [activeWorkflowRecordId, savedWorkflows],
   );
 
   const currentPage =
@@ -93,7 +134,25 @@ function App() {
           title: `${activeTask.name} 工作流`,
           description: '按照步骤完成上下文构建、Prompt 预览、输出质检与版本优化。',
         }
-      : pageDefinitions[currentView];
+      : currentView === 'task-detail'
+        ? {
+            key: 'task-library',
+            title: activeTask.name,
+            description: '查看适用场景、输入要求和流程结构，再进入执行页。',
+          }
+        : currentView === 'result-detail'
+          ? {
+              key: 'results-library',
+              title: activeResult?.title || 'Result Detail',
+              description: '查看结果详情、版本输出和后续复用方式。',
+            }
+          : currentView === 'workflow-detail'
+            ? {
+                key: 'my-workflows',
+                title: activeWorkflowRecord?.taskName || 'Workflow Detail',
+                description: '查看工作流详情、停留步骤和继续编辑入口。',
+              }
+            : pageDefinitions[currentView];
 
   useEffect(() => {
     persistAppState({
@@ -125,6 +184,17 @@ function App() {
     setActiveTaskId(nextTask.id);
     setWorkflowSession(createWorkflowSession(nextTask, sessionOverrides));
     setCurrentView('workflow-execute');
+    setLatestSaveBundle(null);
+  };
+
+  const handleOpenResultDetail = (resultId) => {
+    setActiveResultId(resultId);
+    setCurrentView('result-detail');
+  };
+
+  const handleOpenWorkflowDetail = (workflowId) => {
+    setActiveWorkflowRecordId(workflowId);
+    setCurrentView('workflow-detail');
   };
 
   const upsertTemplate = (nextTemplate) => {
@@ -136,9 +206,7 @@ function App() {
 
   const updateTemplateById = (templateId, updater) => {
     setTaskEntryTemplates((prevItems) =>
-      sortTemplates(
-        prevItems.map((item) => (item.id === templateId ? updater(item) : item)),
-      ),
+      sortTemplates(prevItems.map((item) => (item.id === templateId ? updater(item) : item))),
     );
   };
 
@@ -149,13 +217,16 @@ function App() {
     });
   };
 
+  const handleOpenTaskDetail = (taskId) => {
+    setActiveTaskId(taskId);
+    setCurrentView('task-detail');
+  };
+
   const handleOpenTemplateWorkflow = (templateEntry) => {
     const nextTemplate = markTemplateUsed(templateEntry);
 
     setTaskEntryTemplates((prevItems) =>
-      sortTemplates(
-        prevItems.map((item) => (item.id === templateEntry.id ? nextTemplate : item)),
-      ),
+      sortTemplates(prevItems.map((item) => (item.id === templateEntry.id ? nextTemplate : item))),
     );
 
     openWorkflowWithSession(templateEntry.taskId, {
@@ -163,7 +234,7 @@ function App() {
       generatedVersions: templateEntry.generatedVersions,
       currentStepId: 'context-builder',
       sourceType: 'skill-template',
-      sourceLabel: `${templateEntry.title} · ${templateEntry.sourceLabel}`,
+      sourceLabel: `${templateEntry.title} · 模板入口`,
       linkedTemplateId: templateEntry.id,
       linkedSkillRecordId: templateEntry.linkedSkillRecordId,
       linkedResultId: templateEntry.linkedResultId,
@@ -202,9 +273,7 @@ function App() {
   };
 
   const handleCreateTemplateFromSkill = (record) => {
-    const previousTemplate = taskEntryTemplates.find(
-      (item) => item.id === `${record.id}-template`,
-    );
+    const previousTemplate = taskEntryTemplates.find((item) => item.id === `${record.id}-template`);
     const nextTemplate = buildTemplateFromSkillRecord(record, previousTemplate);
 
     upsertTemplate(nextTemplate);
@@ -212,9 +281,7 @@ function App() {
   };
 
   const handleCreateTemplateFromResult = (result) => {
-    const previousTemplate = taskEntryTemplates.find(
-      (item) => item.id === `${result.id}-template`,
-    );
+    const previousTemplate = taskEntryTemplates.find((item) => item.id === `${result.id}-template`);
     const nextTemplate = buildTemplateFromResult(result, previousTemplate);
 
     upsertTemplate(nextTemplate);
@@ -224,8 +291,7 @@ function App() {
   const handleCreateTemplateFromSession = (mode = 'auto') => {
     const previousTemplate =
       mode !== 'new' && workflowSession.linkedTemplateId
-        ? taskEntryTemplates.find((item) => item.id === workflowSession.linkedTemplateId) ??
-          null
+        ? taskEntryTemplates.find((item) => item.id === workflowSession.linkedTemplateId) ?? null
         : null;
     const nextTemplate = buildTemplateFromSession(
       activeTask,
@@ -249,9 +315,7 @@ function App() {
   };
 
   const handleDeleteTemplate = (templateId) => {
-    setTaskEntryTemplates((prevItems) =>
-      prevItems.filter((item) => item.id !== templateId),
-    );
+    setTaskEntryTemplates((prevItems) => prevItems.filter((item) => item.id !== templateId));
     setWorkflowSession((prevSession) =>
       prevSession.linkedTemplateId === templateId
         ? { ...prevSession, linkedTemplateId: '' }
@@ -367,6 +431,9 @@ function App() {
     setSavedResults(defaults.savedResults);
     setSkillRecords(defaults.skillRecords);
     setTaskEntryTemplates(defaults.taskEntryTemplates);
+    setActiveResultId('');
+    setActiveWorkflowRecordId('');
+    setLatestSaveBundle(null);
   };
 
   const handleWorkflowSessionChange = (updater) => {
@@ -402,6 +469,22 @@ function App() {
     return bundle;
   };
 
+  const handleShowSaveSuccess = (bundle) => {
+    setLatestSaveBundle(bundle);
+    setActiveResultId(bundle.resultEntry.id);
+    setActiveWorkflowRecordId(bundle.workflowEntry.id);
+    setCurrentView('save-success');
+  };
+
+  const handleOpenLinkedResultFromWorkflow = (workflow) => {
+    if (workflow?.linkedResultId) {
+      handleOpenResultDetail(workflow.linkedResultId);
+      return;
+    }
+
+    setCurrentView('results-library');
+  };
+
   return (
     <PageShell
       currentPage={currentPage}
@@ -416,6 +499,7 @@ function App() {
           onSessionChange={handleWorkflowSessionChange}
           onSaveWorkflow={handleSaveWorkflow}
           onCreateTemplate={handleCreateTemplateFromSession}
+          onShowSaveSuccess={handleShowSaveSuccess}
           onNavigate={handleNavigate}
         />
       )}
@@ -434,6 +518,7 @@ function App() {
           tasks={tasks}
           templates={taskEntryTemplates}
           onOpenWorkflow={handleOpenWorkflow}
+          onOpenTaskDetail={handleOpenTaskDetail}
           onOpenTemplate={handleOpenTemplateWorkflow}
           onDeleteTemplate={handleDeleteTemplate}
           onRenameTemplate={handleRenameTemplate}
@@ -447,8 +532,29 @@ function App() {
         />
       )}
 
+      {currentView === 'task-detail' && (
+        <TaskDetail
+          task={activeTask}
+          onBack={() => handleNavigate('task-library')}
+          onOpenWorkflow={handleOpenWorkflow}
+        />
+      )}
+
       {currentView === 'my-workflows' && (
-        <MyWorkflows workflows={savedWorkflows} onOpenWorkflow={handleResumeWorkflow} />
+        <MyWorkflows
+          workflows={savedWorkflows}
+          onOpenWorkflow={handleResumeWorkflow}
+          onOpenWorkflowDetail={handleOpenWorkflowDetail}
+        />
+      )}
+
+      {currentView === 'workflow-detail' && (
+        <WorkflowDetail
+          workflow={activeWorkflowRecord}
+          onBack={() => handleNavigate('my-workflows')}
+          onResumeWorkflow={handleResumeWorkflow}
+          onOpenLinkedResult={handleOpenLinkedResultFromWorkflow}
+        />
       )}
 
       {currentView === 'results-library' && (
@@ -456,11 +562,32 @@ function App() {
           results={savedResults}
           onContinueResult={handleContinueFromResult}
           onCreateTemplate={handleCreateTemplateFromResult}
+          onOpenResultDetail={handleOpenResultDetail}
+        />
+      )}
+
+      {currentView === 'result-detail' && (
+        <ResultDetail
+          result={activeResult}
+          onBack={() => handleNavigate('results-library')}
+          onContinueResult={handleContinueFromResult}
+          onCreateTemplate={handleCreateTemplateFromResult}
+        />
+      )}
+
+      {currentView === 'save-success' && (
+        <SaveSuccess
+          task={activeTask}
+          bundle={latestSaveBundle}
+          onOpenResults={() => handleOpenResultDetail(activeResultId)}
+          onOpenWorkflows={() => handleOpenWorkflowDetail(activeWorkflowRecordId)}
+          onOpenSkills={() => handleNavigate('skill-records')}
+          onBackWorkbench={() => handleNavigate('workbench')}
         />
       )}
 
       {currentView === 'skill-records' && (
-        <MethodArchive
+        <SkillRecords
           records={skillRecords}
           sections={skillArchiveSections}
           onCreateTemplate={handleCreateTemplateFromSkill}

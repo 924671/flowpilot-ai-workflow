@@ -6,6 +6,7 @@ import ScissorsCursor from './ScissorsCursor';
 import WorkflowModal from '../workflow/WorkflowModal';
 
 const MODAL_DELAY_MS = 720;
+const POP_MODAL_DELAY_MS = 860;
 
 function BalloonWorkbench({
   tasks,
@@ -22,11 +23,18 @@ function BalloonWorkbench({
     variant: 'string',
   });
   const [activeTaskId, setActiveTaskId] = useState(null);
+  const [activationTrigger, setActivationTrigger] = useState(null);
   const [cutTaskId, setCutTaskId] = useState(null);
   const [releasedTaskId, setReleasedTaskId] = useState(null);
   const [poppedTaskId, setPoppedTaskId] = useState(null);
+  const [popOrigin, setPopOrigin] = useState({
+    taskId: null,
+    x: '50%',
+    y: '44%',
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalTimerRef = useRef(null);
+  const activationLockRef = useRef(false);
 
   const activeTask = useMemo(
     () => tasks.find((task) => task.id === activeTaskId) ?? null,
@@ -78,8 +86,28 @@ function BalloonWorkbench({
   const handleActivate = (task, trigger = 'string') => (event) => {
     event.preventDefault();
 
-    if (activeTaskId) {
+    if (activeTaskId || activationLockRef.current) {
       return;
+    }
+
+    activationLockRef.current = true;
+
+    if (trigger === 'balloon' && event.currentTarget) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const relativeX = ((event.clientX - rect.left) / rect.width) * 100;
+      const relativeY = ((event.clientY - rect.top) / rect.height) * 100;
+
+      setPopOrigin({
+        taskId: task.id,
+        x: `${Math.max(18, Math.min(82, relativeX))}%`,
+        y: `${Math.max(18, Math.min(58, relativeY))}%`,
+      });
+    } else {
+      setPopOrigin({
+        taskId: null,
+        x: '50%',
+        y: '44%',
+      });
     }
 
     setHoveredTaskId(null);
@@ -88,6 +116,7 @@ function BalloonWorkbench({
       visible: false,
     }));
     setActiveTaskId(task.id);
+    setActivationTrigger(trigger);
     setCutTaskId(task.id);
     setReleasedTaskId(trigger === 'string' ? task.id : null);
     setPoppedTaskId(trigger === 'balloon' ? task.id : null);
@@ -99,7 +128,7 @@ function BalloonWorkbench({
 
     modalTimerRef.current = setTimeout(() => {
       setIsModalOpen(true);
-    }, MODAL_DELAY_MS);
+    }, trigger === 'balloon' ? POP_MODAL_DELAY_MS : MODAL_DELAY_MS);
   };
 
   const handleReset = () => {
@@ -117,9 +146,16 @@ function BalloonWorkbench({
     });
     setIsModalOpen(false);
     setActiveTaskId(null);
+    setActivationTrigger(null);
     setCutTaskId(null);
     setReleasedTaskId(null);
     setPoppedTaskId(null);
+    setPopOrigin({
+      taskId: null,
+      x: '50%',
+      y: '44%',
+    });
+    activationLockRef.current = false;
   };
 
   return (
@@ -202,6 +238,7 @@ function BalloonWorkbench({
                 isReleased={isReleased}
                 isPopped={isPopped}
                 isDimmed={isDimmed}
+                popOrigin={popOrigin.taskId === task.id ? popOrigin : null}
                 onHoverStart={handleHoverStart(task, 'balloon')}
                 onHoverMove={handleHoverMove}
                 onHoverEnd={handleHoverEnd}
@@ -211,7 +248,7 @@ function BalloonWorkbench({
           })}
         </div>
 
-        <ChatEntry activeTask={activeTask} />
+        <ChatEntry activeTask={activeTask} activationTrigger={activationTrigger} />
 
         <ScissorsCursor
           visible={cursorState.visible}
@@ -223,6 +260,7 @@ function BalloonWorkbench({
         <WorkflowModal
           task={activeTask}
           open={isModalOpen}
+          activationTrigger={activationTrigger}
           onReset={handleReset}
           onEnterWorkflow={onEnterWorkflow}
         />

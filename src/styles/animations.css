@@ -51,59 +51,115 @@
     filter: saturate(1);
   }
 
-  35% {
+  16% {
     opacity: 1;
-    transform: translate3d(0, -4px, 0) scale(1.08);
-    filter: saturate(1.08);
+    transform: translate3d(0, -8px, 0) scale(1.12);
+    filter: saturate(1.06) brightness(1.03);
+  }
+
+  30% {
+    opacity: 0.72;
+    transform: translate3d(0, 0, 0) scale(0.84);
+    filter: saturate(1.1) brightness(1.06);
   }
 
   100% {
     opacity: 0;
-    transform: translate3d(0, 8px, 0) scale(0.16);
-    filter: saturate(1.15);
+    transform: translate3d(0, 0, 0) scale(0.03);
+    filter: saturate(1.08) brightness(1.02);
   }
 }
 
-@keyframes balloonShardDrop {
+@keyframes balloonShardBurst {
   0% {
     opacity: 0;
     transform:
-      translate3d(var(--shard-x), var(--shard-y), 0)
-      rotate(var(--shard-rotate))
-      scale(0.7);
+      translate3d(0, 0, 0)
+      rotate(0deg)
+      scale(0.26);
   }
 
-  18% {
-    opacity: 1;
+  12% {
+    opacity: 0.98;
     transform:
-      translate3d(calc(var(--shard-x) * 0.7), calc(var(--shard-y) * 0.6), 0)
-      rotate(calc(var(--shard-rotate) * 0.7))
+      translate3d(calc(var(--shard-x) * 0.2), calc(var(--shard-y) * 0.2), 0)
+      rotate(calc(var(--shard-rotate) * 0.25))
+      scale(0.94);
+  }
+
+  40% {
+    opacity: 0.84;
+    transform:
+      translate3d(calc(var(--shard-x) * 0.88), calc(var(--shard-y) * 0.84), 0)
+      rotate(calc(var(--shard-rotate) * 0.9))
       scale(1);
+  }
+
+  68% {
+    opacity: 0.42;
+    transform:
+      translate3d(calc(var(--shard-x) * 1.12), calc(var(--shard-y) * 1.08), 0)
+      rotate(calc(var(--shard-rotate) * 1.35))
+      scale(0.88);
   }
 
   100% {
     opacity: 0;
     transform:
-      translate3d(calc(var(--shard-x) * 1.25), calc(var(--shard-y) + 126px), 0)
-      rotate(calc(var(--shard-rotate) * 2.3))
-      scale(0.46);
+      translate3d(calc(var(--shard-x) * 1.24), calc(var(--shard-y) * 1.22), 0)
+      rotate(calc(var(--shard-rotate) * 1.72))
+      scale(0.62);
   }
 }
 
 @keyframes balloonPopFlash {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.4);
+    transform: translate(-50%, -50%) scale(0.22);
   }
 
-  35% {
-    opacity: 0.72;
+  24% {
+    opacity: 0.58;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.86);
+  }
+}
+
+@keyframes balloonPunctureMark {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+
+  26% {
+    opacity: 0.96;
     transform: translate(-50%, -50%) scale(1);
   }
 
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.45);
+    transform: translate(-50%, -50%) scale(1.46);
+  }
+}
+
+@keyframes balloonPunctureCrack {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.4);
+  }
+
+  24% {
+    opacity: 0.58;
+    transform: translate(-50%, -50%) rotate(0deg) scale(0.92);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(8deg) scale(1.08);
   }
 }
 

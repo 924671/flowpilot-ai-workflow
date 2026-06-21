@@ -6,18 +6,21 @@ function Balloon({
   isReleased,
   isPopped,
   isDimmed,
+  popOrigin,
   onHoverStart,
   onHoverMove,
   onHoverEnd,
   onActivate,
 }) {
   const burstShards = [
-    { id: 'a', x: '-42%', y: '-10%', rotate: -28, delay: '0ms' },
-    { id: 'b', x: '-18%', y: '-22%', rotate: -8, delay: '36ms' },
-    { id: 'c', x: '8%', y: '-18%', rotate: 12, delay: '18ms' },
-    { id: 'd', x: '28%', y: '-12%', rotate: 26, delay: '54ms' },
-    { id: 'e', x: '-30%', y: '8%', rotate: -18, delay: '72ms' },
-    { id: 'f', x: '18%', y: '10%', rotate: 20, delay: '90ms' },
+    { id: 'a', x: '-92px', y: '-68px', rotate: -28, delay: '0ms', size: 'xl' },
+    { id: 'b', x: '-38px', y: '-102px', rotate: -14, delay: '28ms', size: 'lg' },
+    { id: 'c', x: '42px', y: '-96px', rotate: 18, delay: '56ms', size: 'lg' },
+    { id: 'd', x: '98px', y: '-42px', rotate: 28, delay: '84ms', size: 'xl' },
+    { id: 'e', x: '78px', y: '48px', rotate: 22, delay: '112ms', size: 'md' },
+    { id: 'f', x: '18px', y: '88px', rotate: 10, delay: '140ms', size: 'sm' },
+    { id: 'g', x: '-58px', y: '74px', rotate: -20, delay: '168ms', size: 'md' },
+    { id: 'h', x: '-104px', y: '12px', rotate: -30, delay: '196ms', size: 'lg' },
   ];
 
   const positionOverrides = {
@@ -39,10 +42,13 @@ function Balloon({
         left: `${task.balloonPosition.x + offset.x}px`,
         top: `${task.balloonPosition.y + offset.y}px`,
         animationDelay: `${index * 260}ms`,
+        '--burst-x': popOrigin?.x ?? '50%',
+        '--burst-y': popOrigin?.y ?? '44%',
       }}
-      onMouseEnter={onHoverStart}
-      onMouseMove={onHoverMove}
-      onMouseLeave={onHoverEnd}
+      onPointerEnter={onHoverStart}
+      onPointerMove={onHoverMove}
+      onPointerLeave={onHoverEnd}
+      onPointerDown={onActivate}
       onClick={onActivate}
       disabled={isReleased || isPopped || isDimmed}
       aria-label={task.name}
@@ -64,7 +70,7 @@ function Balloon({
         {burstShards.map((shard) => (
           <span
             key={shard.id}
-            className={`balloon__shard balloon__shard--${shard.id}`}
+            className={`balloon__shard balloon__shard--${shard.size} balloon__shard--${shard.id}`}
             style={{
               '--shard-x': shard.x,
               '--shard-y': shard.y,

@@ -12,11 +12,9 @@ function Workbench({
     <section className="workbench-page">
       <div className="workbench-page__intro">
         <div className="workbench-page__intro-copy">
-          <h2 className="workbench-page__title">
-            今天想让 AI 帮你完成什么工作？
-          </h2>
+          <h2 className="workbench-page__title">今天想让 AI 帮你完成什么工作？</h2>
           <p className="workbench-page__description">
-            气球代表六个高频职场任务，线绑在下方工作入口，剪断后进入对应工作流。
+            气球代表六个高频职场任务，线绑在下方工作入口，剪断或戳破后进入对应工作流。
           </p>
         </div>
       </div>

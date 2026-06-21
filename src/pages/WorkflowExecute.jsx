@@ -21,6 +21,7 @@ function WorkflowExecute({
   onSessionChange,
   onSaveWorkflow,
   onCreateTemplate,
+  onShowSaveSuccess,
   onNavigate,
 }) {
   const [saveMessage, setSaveMessage] = useState('');
@@ -72,7 +73,10 @@ function WorkflowExecute({
         return {
           title: '下一步建议',
           blocks: [
-            { heading: '操作建议', items: ['进入 Output Check，不要直接复制结果。'] },
+            {
+              heading: '操作建议',
+              items: ['先进入 Output Check，不要直接复制当前结果。'],
+            },
           ],
         };
       case 'output-check':
@@ -92,7 +96,7 @@ function WorkflowExecute({
           blocks: [
             {
               heading: '优化方向',
-              items: ['面向领导的汇报版', '面向团队的同步版', '面向演示的 PPT 大纲版'],
+              items: ['面向领导的汇报版', '面向团队的同步版', '面向展示的 PPT 大纲版'],
             },
           ],
         };
@@ -104,7 +108,7 @@ function WorkflowExecute({
               heading: '记录方式',
               items: [
                 '使用了 Context Expression：补充了目标、对象和限制条件',
-                '使用了 Output Check：发现结果缺少数据支撑',
+                '使用了 Output Check：发现输出缺少数据支撑',
                 '使用了 Version Optimization：生成了领导汇报版和团队同步版',
               ],
             },
@@ -173,6 +177,7 @@ function WorkflowExecute({
     setSaveMessage(
       `已在 ${bundle.savedAtLabel} 保存到 Results Library、My Workflows 和 Skill Records。`,
     );
+    onShowSaveSuccess?.(bundle);
   };
 
   const handleCreateTemplate = (mode) => {
@@ -242,11 +247,11 @@ function WorkflowExecute({
                   <span className="template-session-card__badge">
                     {getTemplateSourceBadge(activeTemplate)}
                   </span>
-                  <h4 className="template-session-card__title">当前正在编辑模板回填内容</h4>
+                  <h4 className="template-session-card__title">当前会话来自模板回填</h4>
                 </div>
                 <p className="template-session-card__description">
                   你现在使用的是“{activeTemplate.title}”，来源于
-                  {activeTemplate.sourceLabel}。可以直接更新当前模板，或另存为一个新模板入口。
+                  {activeTemplate.sourceLabel}。可以直接更新当前模板，也可以另存为一个新模板入口。
                 </p>
                 <div className="template-session-card__meta">
                   <span>最近使用：{activeTemplate.lastUsedAtLabel || '刚刚回填'}</span>
@@ -264,7 +269,7 @@ function WorkflowExecute({
               </article>
 
               <article className="save-card">
-                <h4 className="save-card__title">保存为 My Workflow</h4>
+                <h4 className="save-card__title">保存到 My Workflows</h4>
                 <p className="save-card__description">
                   将本次上下文、Prompt 结构和版本结果沉淀为可继续使用的工作流。
                 </p>
@@ -284,51 +289,47 @@ function WorkflowExecute({
                   <li>
                     使用了 Version Optimization：
                     {session.generatedVersions.length > 0
-                      ? `生成了 ${session.generatedVersions.map((item) => item.name).join('、')}`
-                      : '当前还没有生成额外版本'}
+                      ? `生成了${session.generatedVersions.map((item) => item.name).join('、')}`
+                      : '当前还没有额外版本'}
                   </li>
                 </ul>
               </article>
             </div>
 
             <div className="save-actions">
-              <button
-                type="button"
-                className="workflow-modal__button workflow-modal__button--primary"
-                onClick={handleSaveAll}
-              >
+              <Button className="workflow-modal__button workflow-modal__button--primary" onClick={handleSaveAll}>
                 保存本次结果
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="ghost"
                 className="workflow-modal__button workflow-modal__button--ghost"
                 onClick={() => handleCreateTemplate(activeTemplate ? 'auto' : 'new')}
               >
                 {activeTemplate ? '更新当前模板' : '保存为模板入口'}
-              </button>
+              </Button>
               {activeTemplate && (
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className="workflow-modal__button workflow-modal__button--ghost"
                   onClick={() => handleCreateTemplate('new')}
                 >
                   另存为新模板
-                </button>
+                </Button>
               )}
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 className="workflow-modal__button workflow-modal__button--ghost"
                 onClick={() => onNavigate?.('results-library')}
               >
                 查看 Results Library
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="ghost"
                 className="workflow-modal__button workflow-modal__button--ghost"
                 onClick={() => onNavigate?.('skill-records')}
               >
                 查看 Skill Records
-              </button>
+              </Button>
             </div>
 
             {saveMessage && <p className="save-feedback">{saveMessage}</p>}

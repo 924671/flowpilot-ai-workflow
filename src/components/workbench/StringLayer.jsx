@@ -27,13 +27,18 @@ function StringLayer({
             <path
               d={task.stringPath}
               className={`string-layer__path string ${isCut ? 'is-cut' : ''} ${isHovered ? 'is-hovered' : ''}`}
+              pointerEvents="none"
             />
             <path
               d={task.stringPath}
               className={`string-layer__hit string-hit ${isDisabled ? 'is-disabled' : ''}`}
-              onMouseEnter={onHoverStart(task, 'string')}
-              onMouseMove={onHoverMove}
-              onMouseLeave={onHoverEnd}
+              stroke="transparent"
+              vectorEffect="non-scaling-stroke"
+              pointerEvents={isDisabled ? 'none' : 'stroke'}
+              onPointerEnter={onHoverStart(task, 'string')}
+              onPointerMove={onHoverMove}
+              onPointerLeave={onHoverEnd}
+              onPointerDown={onActivate(task, 'string')}
               onClick={onActivate(task, 'string')}
             />
           </g>
