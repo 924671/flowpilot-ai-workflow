@@ -6,7 +6,10 @@ import {
 } from './workflows';
 import { buildTemplateFromSkillRecord, sortTemplates } from './templateEntries';
 
-const STORAGE_KEY = 'flowpilot.app.state.v3';
+const STORAGE_KEY = 'flowpilot.app.state.v5.clean-text';
+
+const MOJIBAKE_PATTERN =
+  /(鍏|绋|鏌|姹|瀛|妯|浣|瑙|杩|淇|褰|宸|闈|鐢|鈫|銆|�|€)/;
 
 function getDefaultTemplates() {
   return sortTemplates(
@@ -39,6 +42,11 @@ export function loadAppState(taskList) {
     const raw = window.localStorage.getItem(STORAGE_KEY);
 
     if (!raw) {
+      return defaults;
+    }
+
+    if (MOJIBAKE_PATTERN.test(raw)) {
+      window.localStorage.removeItem(STORAGE_KEY);
       return defaults;
     }
 

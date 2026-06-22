@@ -14,6 +14,9 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
     );
   }
 
+  const contextValues = workflow.contextValues ?? {};
+  const generatedVersions = workflow.generatedVersions ?? [];
+
   return (
     <section className="library-page">
       <div className="library-page__header">
@@ -56,19 +59,19 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
           <section className="workflow-detail-card__section">
             <span className="workflow-detail-card__label">上下文快照</span>
             <div className="workflow-detail-card__context">
-              <p>项目名称：{workflow.contextValues?.projectName}</p>
-              <p>任务目标：{workflow.contextValues?.taskGoal}</p>
-              <p>执行动作：{workflow.contextValues?.executionActions}</p>
-              <p>数据结果：{workflow.contextValues?.dataResults}</p>
-              <p>下一步计划：{workflow.contextValues?.nextPlan}</p>
+              <p>项目名称：{contextValues.projectName || '待补充'}</p>
+              <p>任务目标：{contextValues.taskGoal || '待补充'}</p>
+              <p>执行动作：{contextValues.executionActions || '待补充'}</p>
+              <p>数据结果：{contextValues.dataResults || '待补充'}</p>
+              <p>下一步计划：{contextValues.nextPlan || '待补充'}</p>
             </div>
           </section>
 
           <section className="workflow-detail-card__section">
             <span className="workflow-detail-card__label">已生成版本</span>
             <div className="workflow-detail-card__panel">
-              {(workflow.generatedVersions?.length ?? 0) > 0 ? (
-                workflow.generatedVersions.map((version) => (
+              {generatedVersions.length > 0 ? (
+                generatedVersions.map((version) => (
                   <p key={version.id}>
                     {version.name}：{version.preview}
                   </p>

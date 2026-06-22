@@ -35,8 +35,7 @@ function TaskLibrary({ tasks, templates, onOpenWorkflow, onOpenTemplate, onOpenT
               <span className="library-group__pill">6 个工作流任务</span>
             </div>
             <p className="library-group__description">
-              这些入口覆盖复盘、汇报、运营、纪要、分析和演示结构，适合作为 AI
-              工作流的起点。
+              这些入口覆盖复盘、汇报、运营、纪要、分析和演示结构，适合作为 AI 工作流的起点。
             </p>
           </div>
 

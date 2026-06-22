@@ -1,7 +1,12 @@
 import React from 'react';
 import Button from '../common/Button';
 
+function showValue(value) {
+  return value && String(value).trim() ? value : '待补充';
+}
+
 function SaveResult({
+  workflowState,
   outputChecks = [],
   generatedVersions = [],
   saveMessage = '',
@@ -10,16 +15,13 @@ function SaveResult({
   onCreateTemplate,
   onNavigate,
 }) {
-  const safeChecks = Array.isArray(outputChecks) ? outputChecks : [];
-  const safeVersions = Array.isArray(generatedVersions) ? generatedVersions : [];
-
-  const riskLabels = safeChecks
-    .filter((item) => item?.status && item.status !== '充分')
+  const contextData = workflowState?.contextData ?? {};
+  const aiOutput = workflowState?.aiOutput ?? {};
+  const usedSkills = workflowState?.usedSkills ?? [];
+  const versionNames = generatedVersions.map((item) => item.name).filter(Boolean);
+  const riskLabels = outputChecks
+    .filter((item) => item.status !== '充分')
     .map((item) => item.label)
-    .filter(Boolean);
-
-  const versionNames = safeVersions
-    .map((item) => item?.name)
     .filter(Boolean);
 
   return (
@@ -32,6 +34,25 @@ function SaveResult({
       <p className="execute-panel__description">
         将本次工作流结果保存到成果库、我的工作流，并记录本次使用过的方法。
       </p>
+
+      <div className="save-summary-grid">
+        <article className="save-summary-card">
+          <h4 className="save-summary-card__title">当前任务</h4>
+          <p>{showValue(workflowState?.taskName)}</p>
+        </article>
+        <article className="save-summary-card">
+          <h4 className="save-summary-card__title">原始上下文</h4>
+          <p>{showValue(contextData.projectBackground || contextData.taskGoal)}</p>
+        </article>
+        <article className="save-summary-card">
+          <h4 className="save-summary-card__title">原始数据</h4>
+          <p>{showValue(contextData.dataResults)}</p>
+        </article>
+        <article className="save-summary-card">
+          <h4 className="save-summary-card__title">处理后摘要</h4>
+          <p>{showValue(aiOutput.summary)}</p>
+        </article>
+      </div>
 
       <div className="save-result-grid">
         <article className="save-card">
@@ -65,6 +86,46 @@ function SaveResult({
         </article>
       </div>
 
+      <article className="save-card save-card--records">
+        <h4 className="save-card__title">本次沉淀的方法记录</h4>
+
+        {versionNames.length > 0 ? (
+          <p className="save-card__description">已生成版本：{versionNames.join(' / ')}</p>
+        ) : (
+          <p className="save-card__description">
+            当前还没有生成额外版本，仍然可以先保存主结果。
+          </p>
+        )}
+
+        <div className="save-record-columns">
+          <div>
+            <h5 className="save-record-columns__title">Output Check 备注</h5>
+            <ul className="save-card__list">
+              {outputChecks.map((item) => (
+                <li key={item.label}>
+                  {item.label}：{item.status}，{item.note}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h5 className="save-record-columns__title">本次使用过的 Skill</h5>
+            <ul className="save-card__list">
+              {usedSkills.map((item) => (
+                <li key={item.name}>{item.record}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {riskLabels.length > 0 ? (
+          <p className="save-card__description">
+            保存后仍建议继续补充：{riskLabels.join('、')}。
+          </p>
+        ) : null}
+      </article>
+
       {activeTemplate ? (
         <div className="template-session-card">
           <div className="template-session-card__header">
@@ -76,31 +137,6 @@ function SaveResult({
           </p>
         </div>
       ) : null}
-
-      <article className="save-card save-card--records">
-        <h4 className="save-card__title">本次沉淀的方法记录</h4>
-        {versionNames.length > 0 ? (
-          <p className="save-card__description">已生成版本：{versionNames.join(' / ')}</p>
-        ) : (
-          <p className="save-card__description">当前还没有生成额外版本，仍然可以先保存主结果。</p>
-        )}
-
-        <ul className="save-card__list">
-          <li>使用了 Context Expression：补充了目标、对象和限制条件</li>
-          <li>
-            使用了 Output Check：
-            {riskLabels.length > 0
-              ? `发现结果在 ${riskLabels.join('、')} 上仍需补充`
-              : '确认结果已经具备较好的提交基础'}
-          </li>
-          <li>
-            使用了 Version Optimization：
-            {versionNames.length > 0
-              ? `生成了 ${versionNames.join('、')}`
-              : '当前还没有生成额外版本'}
-          </li>
-        </ul>
-      </article>
 
       <div className="save-actions">
         <Button onClick={onSaveAll}>保存本次结果</Button>
@@ -123,7 +159,14 @@ function SaveResult({
         </Button>
       </div>
 
-      {saveMessage ? <p className="save-feedback">{saveMessage}</p> : null}
+      {saveMessage ? (
+        <div className="save-feedback">
+          <p>{saveMessage}</p>
+          <Button variant="ghost" onClick={() => onNavigate?.('results-library')}>
+            查看成果库
+          </Button>
+        </div>
+      ) : null}
     </section>
   );
 }

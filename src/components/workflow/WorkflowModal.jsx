@@ -9,7 +9,7 @@ function WorkflowModal({ task, open, activationTrigger, onReset, onEnterWorkflow
   const description =
     activationTrigger === 'balloon'
       ? '气球已被戳破，正在把这个任务切换为对应 AI 工作流。'
-      : '任务线已被剪断，正在把这个任务切换为对应 AI 工作流。';
+      : '任务线已被剪断，气球飞走，正在进入对应 AI 工作流。';
 
   return (
     <div

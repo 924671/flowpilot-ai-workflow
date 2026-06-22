@@ -25,12 +25,12 @@ function MyWorkflows({ workflows, onOpenWorkflow, onOpenWorkflowDetail }) {
 
   const stats = useMemo(
     () => ({
-      inProgress: 3,
-      saved: 8,
-      optimizable: 5,
+      inProgress: workflows.filter((item) => item.status === '进行中').length || 3,
+      saved: workflows.filter((item) => item.status === '已保存').length || 8,
+      optimizable: workflows.filter((item) => item.status === '待优化').length || 5,
       weeklyNew: 4,
     }),
-    [],
+    [workflows],
   );
 
   if (!workflows.length) {
@@ -104,7 +104,7 @@ function MyWorkflows({ workflows, onOpenWorkflow, onOpenWorkflowDetail }) {
               </span>
             </div>
             <p className="library-group__description">
-              优先展示这条流程目前停在什么步骤、适合从哪里继续，以及已经用过哪些 Skill。
+              优先展示这条流程目前停在哪个步骤、适合从哪里继续，以及已经用过哪些 Skill。
             </p>
           </div>
 

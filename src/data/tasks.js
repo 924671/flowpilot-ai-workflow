@@ -44,7 +44,7 @@ export const tasks = [
     subtitle: '提炼结论、待办与责任人',
     color: 'purple',
     category: '信息整理',
-    description: '适用于项目会、跨部门同步会、客户沟通会后整理。',
+    description: '适用于项目会、跨部门同步会、客户沟通会后的整理。',
     scene: '项目例会、客户会议、内部同步后的会后记录。',
     expectedFlow: '上下文 → Prompt → 质检 → 版本',
     skillTags: ['Context Expression', 'Output Check', 'Prompt Structure'],

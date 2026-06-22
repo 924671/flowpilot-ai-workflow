@@ -8,8 +8,9 @@ function VersionCards({
   onSelectVersion,
   onGoToSave,
 }) {
-  const generatedIds = new Set(generatedVersions.map((item) => item.id));
-  const hasGeneratedVersion = generatedVersions.length > 0;
+  const safeGeneratedVersions = Array.isArray(generatedVersions) ? generatedVersions : [];
+  const generatedIds = new Set(safeGeneratedVersions.map((item) => item.id));
+  const hasGeneratedVersion = safeGeneratedVersions.length > 0;
 
   return (
     <section className="execute-panel">
@@ -19,12 +20,12 @@ function VersionCards({
       </div>
 
       <p className="execute-panel__description">
-        为同一份结果生成不同沟通场景下的版本，先预览当前版本，再决定是否进入保存步骤。
+        基于 AI Output 和 Output Check，为不同沟通场景生成可预览、可保存的版本。
       </p>
 
       <div className="version-cards-grid">
         {versions.map((version) => {
-          const generatedVersion = generatedVersions.find((item) => item.id === version.id);
+          const generatedVersion = safeGeneratedVersions.find((item) => item.id === version.id);
           const isGenerated = generatedIds.has(version.id);
           const isSelected = selectedVersionId === version.id;
 
@@ -38,20 +39,18 @@ function VersionCards({
                   <h4 className="version-card__title">{version.name}</h4>
                   <p className="version-card__scene">{version.scene}</p>
                 </div>
-                {isGenerated && <span className="version-card__status">已生成</span>}
+                {isGenerated ? <span className="version-card__status">已生成</span> : null}
               </div>
 
-              {generatedVersion && (
+              {generatedVersion ? (
                 <p className="version-card__preview">{generatedVersion.preview}</p>
-              )}
+              ) : null}
 
               <button
                 type="button"
                 className="version-card__button"
                 onClick={() =>
-                  isGenerated
-                    ? onSelectVersion?.(version.id)
-                    : onGenerateVersion?.(version.id)
+                  isGenerated ? onSelectVersion?.(version.id) : onGenerateVersion?.(version.id)
                 }
               >
                 {isGenerated ? '查看版本' : '生成版本'}

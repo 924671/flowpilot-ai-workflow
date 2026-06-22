@@ -54,7 +54,7 @@ const pageDefinitions = {
   'workflow-detail': {
     key: 'my-workflows',
     title: 'Workflow Detail',
-    description: '查看这条工作流当前停在哪一步、保留了哪些上下文，以及如何继续编辑。',
+    description: '查看工作流停留步骤、上下文快照和继续编辑入口。',
   },
   'results-library': {
     key: 'results-library',
@@ -69,12 +69,12 @@ const pageDefinitions = {
   'save-success': {
     key: 'results-library',
     title: 'Save Complete',
-    description: '本次任务已经完成保存，可以继续查看结果详情，或回到工作台开始下一项任务。',
+    description: '本次任务已经完成保存，可以查看结果详情，或回到工作台开始下一项任务。',
   },
   'skill-records': {
     key: 'skill-records',
     title: 'Skill Records',
-    description: '记录真实任务里用过的方法，而不是等级或积分。',
+    description: '记录真实任务里用过的方法，而不是游戏化成长反馈。',
   },
   membership: {
     key: 'membership',
@@ -132,7 +132,7 @@ function App() {
       ? {
           key: 'workbench',
           title: `${activeTask.name} 工作流`,
-          description: '按照步骤完成上下文构建、Prompt 预览、输出质检与版本优化。',
+          description: '按照步骤完成上下文构建、Prompt 预览、AI 协作、输出质检与版本优化。',
         }
       : currentView === 'task-detail'
         ? {
@@ -152,7 +152,7 @@ function App() {
                 title: activeWorkflowRecord?.taskName || 'Workflow Detail',
                 description: '查看工作流详情、停留步骤和继续编辑入口。',
               }
-            : pageDefinitions[currentView];
+            : pageDefinitions[currentView] ?? pageDefinitions.workbench;
 
   useEffect(() => {
     persistAppState({
@@ -442,8 +442,20 @@ function App() {
     );
   };
 
-  const handleSaveWorkflow = () => {
-    const bundle = buildSaveArtifacts(activeTask, workflowSession);
+  const handleSaveWorkflow = (sessionSnapshot = workflowSession) => {
+    const mergedSession = {
+      ...workflowSession,
+      ...sessionSnapshot,
+      contextValues:
+        sessionSnapshot.contextValues ??
+        sessionSnapshot.contextData ??
+        workflowSession.contextValues,
+      contextData:
+        sessionSnapshot.contextData ??
+        sessionSnapshot.contextValues ??
+        workflowSession.contextData,
+    };
+    const bundle = buildSaveArtifacts(activeTask, mergedSession);
 
     setSavedResults((prevItems) => {
       const filtered = prevItems.filter((item) => item.id !== bundle.resultEntry.id);
@@ -459,8 +471,10 @@ function App() {
     });
     setWorkflowSession((prevSession) => ({
       ...prevSession,
+      ...mergedSession,
       isSaved: true,
       savedAtLabel: bundle.savedAtLabel,
+      savedResult: bundle.resultEntry,
       linkedWorkflowId: bundle.workflowEntry.id,
       linkedResultId: bundle.resultEntry.id,
       linkedSkillRecordId: bundle.skillRecordEntry.id,

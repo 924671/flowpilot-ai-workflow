@@ -188,14 +188,16 @@ export function buildTemplateExportPayload(template) {
 export function importTemplatePayload(payload) {
   const timestamp = Date.now();
   const title = payload?.title?.trim() || `${payload?.taskName || '未命名任务'} 模板入口`;
+  const description =
+    payload?.description || '从外部 JSON 导入的模板入口，可直接继续回填使用。';
+  const tags = Array.from(new Set([...(payload?.tags ?? []), payload?.taskName].filter(Boolean)));
 
   return {
     id: payload?.id || `imported-template-${timestamp}`,
     taskId: payload?.taskId || '',
     taskName: payload?.taskName || '未命名任务',
     title,
-    description:
-      payload?.description || '从外部 JSON 导入的模板入口，可直接继续回填使用。',
+    description,
     sourceType: payload?.sourceType || 'imported-template',
     sourceLabel: payload?.sourceLabel || '来自导入文件',
     contextValues: cloneContextValues(payload?.contextValues),
@@ -211,7 +213,7 @@ export function importTemplatePayload(payload) {
     usageCount: payload?.usageCount ?? 0,
     lastUsedAt: null,
     lastUsedAtLabel: '',
-    tags: Array.from(new Set([...(payload?.tags ?? []), payload?.taskName].filter(Boolean))),
+    tags,
     versionHistory:
       payload?.versionHistory?.length > 0
         ? cloneHistory(payload.versionHistory)
@@ -222,11 +224,8 @@ export function importTemplatePayload(payload) {
               savedAt: timestamp,
               savedAtLabel: formatActivityLabel(timestamp),
               title,
-              description:
-                payload?.description || '从外部 JSON 导入的模板入口，可直接继续回填使用。',
-              tags: Array.from(
-                new Set([...(payload?.tags ?? []), payload?.taskName].filter(Boolean)),
-              ),
+              description,
+              tags,
               contextValues: cloneContextValues(payload?.contextValues),
               generatedVersions: cloneGeneratedVersions(payload?.generatedVersions),
             },

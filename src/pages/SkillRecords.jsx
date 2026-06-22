@@ -18,7 +18,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
       <div className="library-page__header">
         <h2 className="library-page__title">Skill Records</h2>
         <p className="library-page__description">
-          这里记录的是你在真实任务中用过的方法，而不是等级、积分或成长体系。
+          这里记录的是你在真实任务中用过的方法，而不是游戏化成长反馈。
         </p>
       </div>
 
@@ -71,7 +71,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
                 <span className="library-group__pill library-group__pill--soft">最近 5 条</span>
               </div>
               <p className="library-group__description">
-                这些记录说明了最近一次任务里，哪些方法真正被使用过，以及它们带来了什么调整。
+                这些记录说明最近一次任务里，哪些方法真正被使用过，以及它们带来了什么调整。
               </p>
             </div>
 
@@ -118,7 +118,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
               </span>
             </div>
             <p className="library-group__description">
-              这些记录说明了这次任务里实际用过哪些方法，以及它们为什么值得沉淀成新入口。
+              这些记录说明这次任务里实际用过哪些方法，以及它们为什么值得沉淀成新入口。
             </p>
           </div>
 

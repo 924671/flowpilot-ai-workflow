@@ -3,6 +3,7 @@ import React from 'react';
 const defaultStepLabels = [
   { id: 'context', label: 'Context Builder' },
   { id: 'prompt', label: 'Prompt Preview' },
+  { id: 'session', label: 'AI Work Session' },
   { id: 'output', label: 'AI Output' },
   { id: 'check', label: 'Output Check' },
   { id: 'version', label: 'Version Optimization' },

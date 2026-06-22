@@ -16,7 +16,7 @@ const planOverview = [
   {
     label: '适用对象',
     value: 'AI 新手职场者',
-    note: '适合需要快速把真实工作任务接入 AI，但缺少稳定方法结构的人。',
+    note: '适合需要把真实工作任务接入 AI，但缺少稳定方法结构的人。',
   },
 ];
 
@@ -62,7 +62,7 @@ const plans = [
       '统一版本输出口径',
       '共享 Skill Records 和可复用建议',
     ],
-    note: '强调方法复用和协作口径统一，而不是做成重型后台系统。',
+    note: '强调方法复用和协作口径统一，而不是重型后台系统。',
     action: '适合团队试用',
     featured: false,
   },
@@ -91,7 +91,7 @@ const capabilityGroups = [
     title: '模板沉淀与模板回流',
     description: '把上下文结构、版本输出和 Skill 记录反向沉淀为下次入口。',
     coverage: {
-      free: '不强调',
+      free: '轻量支持',
       pro: '支持',
       team: '重点能力',
     },
@@ -109,9 +109,9 @@ const capabilityGroups = [
 
 const faqs = [
   {
-    question: '为什么 Membership 不是等级页？',
+    question: '为什么 Membership 不是成长页？',
     answer:
-      'FlowPilot 的 Membership 用来说明不同方案覆盖的能力范围，而不是构建等级、积分或成长体系。',
+      'FlowPilot 的 Membership 用来说明不同方案覆盖的能力范围，而不是构建游戏化成长体系。',
   },
   {
     question: 'Pro 和 Team 的差别是什么？',
@@ -121,7 +121,7 @@ const faqs = [
   {
     question: '这页会接入支付或注册吗？',
     answer:
-      '当前原型阶段不接入真实支付、登录或权限控制，这一页只展示商业化结构和能力层级。',
+      '当前原型阶段不接入真实支付、登录或权限控制，这一页只展示商业化结构和能力差异。',
   },
 ];
 
@@ -140,10 +140,10 @@ function Membership() {
           <div className="library-group__header">
             <div className="library-group__title-row">
               <h3 className="library-group__title">方案概览</h3>
-              <span className="library-group__pill">非等级体系</span>
+              <span className="library-group__pill">非游戏化方案</span>
             </div>
             <p className="library-group__description">
-              这里展示的是能力覆盖和适用场景，不包含等级、积分、徽章或任何游戏化成长机制。
+              这里展示的是能力覆盖和适用场景，不包含任何游戏化成长机制。
             </p>
           </div>
 
@@ -167,7 +167,7 @@ function Membership() {
               </span>
             </div>
             <p className="library-group__description">
-              页面重点展示商业化结构和能力差异，不做高饱和销售感，也不引入支付流程。
+              页面重点展示商业化结构和能力差异，不做高饱和营销感，也不引入支付流程。
             </p>
           </div>
 
