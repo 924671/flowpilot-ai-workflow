@@ -234,7 +234,7 @@ function BalloonWorkbench({
 
         {templates.length > 0 && (
           <aside className="balloon-workbench__template-overlay">
-            <span className="balloon-workbench__template-badge">Template Entry</span>
+            <span className="balloon-workbench__template-badge">模板入口</span>
             <p className="balloon-workbench__template-text">
               最近已经沉淀出 {templates.length} 个模板入口，刷新页面后也会保留。
             </p>

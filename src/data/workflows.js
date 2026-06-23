@@ -1,11 +1,11 @@
 export const workflowStepItems = [
-  { id: 'context', label: 'Context Builder' },
-  { id: 'prompt', label: 'Prompt Preview' },
-  { id: 'session', label: 'AI Work Session' },
-  { id: 'output', label: 'AI Output' },
-  { id: 'check', label: 'Output Check' },
-  { id: 'version', label: 'Version Optimization' },
-  { id: 'save', label: 'Save Result' },
+  { id: 'context', label: '上下文构建' },
+  { id: 'prompt', label: 'Prompt 预览' },
+  { id: 'session', label: 'AI 协作工作区' },
+  { id: 'output', label: 'AI 输出' },
+  { id: 'check', label: '输出质检' },
+  { id: 'version', label: '版本优化' },
+  { id: 'save', label: '保存结果' },
 ];
 
 const stepIdMap = {
@@ -31,7 +31,7 @@ export function normalizeStepId(stepId) {
 
 export function getStepLabel(stepId) {
   const normalizedStepId = normalizeStepId(stepId);
-  return workflowStepItems.find((step) => step.id === normalizedStepId)?.label ?? 'Context Builder';
+  return workflowStepItems.find((step) => step.id === normalizedStepId)?.label ?? '上下文构建';
 }
 
 const versionCatalog = [
@@ -76,7 +76,7 @@ const defaultContextByTask = {
     projectName: 'FlowPilot 工作台交互改版',
     projectBackground: '团队希望把 AI 使用入口从普通列表改成更有任务感的工作台，并强化结果沉淀与后续复用。',
     taskGoal: '沉淀本次改版的目标、产出、问题和下一步计划，作为后续复盘与展示基础。',
-    executionActions: '完成气球工作台、工作流执行页、结果保存、模板回填和 Skill Records 的核心链路。',
+    executionActions: '完成气球工作台、工作流执行页、结果保存、模板回填和方法记录的核心链路。',
     dataResults: '已完成 6 个高频任务入口、7 步工作流结构、结果保存、模板回填和方法记录。',
     rawMaterials: '页面截图、交互路径、阶段需求说明和本地 mock 数据。',
     keyConclusion: '工作流闭环已经跑通，下一步重点是统一细节和增强真实案例。',
@@ -308,7 +308,7 @@ function createWorkflowRecord(taskId, status, stepId, generatedVersions = []) {
     sourceType: 'workflow-library',
     sourceLabel: `来自${taskName}入口`,
     summary: `${contextValues.projectName} 已形成可继续编辑的工作流记录。`,
-    skillTags: ['Context Expression', 'Output Check', 'Workflow Reuse'],
+    skillTags: ['上下文表达', '输出质检', '流程复用'],
     contextData: contextValues,
     contextValues,
     generatedVersions,
@@ -331,7 +331,7 @@ function createResultRecord(taskId, type, versionLabel, generatedVersions = []) 
     qualitySummary: '结构完整，可继续复用。',
     savedAtLabel: workflow.savedAtLabel,
     sourceType: 'result-library',
-    sourceLabel: '来自 My Workflows',
+    sourceLabel: '来自我的流程',
     audience: contextValues.reportAudience,
     summary: contextValues.keyConclusion || contextValues.dataResults,
     nextPlan: contextValues.nextPlan,
@@ -478,13 +478,13 @@ export function buildSaveArtifacts(task, session) {
     usedSkills.length > 0
       ? usedSkills.map((item) => item.record ?? item)
       : [
-          '使用了 Context Expression：补充了目标、对象、数据结果和限制条件',
+          '使用了上下文表达：补充了目标、对象、数据结果和限制条件',
           riskItems.length > 0
-            ? `使用了 Output Check：发现结果在 ${riskItems.join('、')} 上仍需补充`
-            : '使用了 Output Check：确认结果已经具备较好的提交基础',
+            ? `使用了输出质检：发现结果在 ${riskItems.join('、')} 上仍需补充`
+            : '使用了输出质检：确认结果已经具备较好的提交基础',
           versionNames.length > 0
-            ? `使用了 Version Optimization：生成了${versionNames.join('、')}`
-            : '使用了 Version Optimization：准备生成不同沟通场景下的版本',
+            ? `使用了版本优化：生成了${versionNames.join('、')}`
+            : '使用了版本优化：准备生成不同沟通场景下的版本',
         ];
 
   return {

@@ -65,7 +65,7 @@ function AIWorkSession({
     }
 
     onSendMessage?.(nextMessage);
-    setLastAction('已发送你的补充要求，AI 已基于当前上下文生成新的协作回复。');
+    setLastAction('已发送补充要求，AI 已基于当前上下文生成新的协作回复。');
     setDraft('');
   };
 
@@ -77,7 +77,7 @@ function AIWorkSession({
   return (
     <section className="execute-panel">
       <div className="execute-panel__header">
-        <span className="execute-panel__eyebrow">AI Work Session</span>
+        <span className="execute-panel__eyebrow">AI 协作工作区</span>
         <h3 className="execute-panel__title">任务内 AI 协作工作区</h3>
       </div>
 
@@ -176,7 +176,7 @@ function AIWorkSession({
                 '已读取上下文',
                 '等待生成初稿建议',
                 '数据支撑待检查',
-                '完成协作后可进入 AI Output',
+                '完成协作后可进入 AI 输出',
               ]).map((item) => (
                 <li key={item}>{item}</li>
               ))}
@@ -185,7 +185,7 @@ function AIWorkSession({
 
           {sessionOutput ? (
             <div className="ai-session-sidecard__footer">
-              <Button onClick={onGoToOutput}>进入 AI Output</Button>
+              <Button onClick={onGoToOutput}>进入 AI 输出</Button>
             </div>
           ) : null}
         </aside>

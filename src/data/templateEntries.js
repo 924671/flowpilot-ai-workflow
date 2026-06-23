@@ -106,12 +106,12 @@ export function buildTemplateFromSkillRecord(record, previousTemplate) {
       contextValues: cloneContextValues(record.contextValues),
       generatedVersions: cloneGeneratedVersions(record.generatedVersions),
       sourceType: 'skill-record',
-      sourceLabel: '来自 Skill Records',
+      sourceLabel: '来自方法记录',
       linkedSkillRecordId: record.id,
       linkedResultId: record.linkedResultId ?? '',
       linkedWorkflowId: record.linkedWorkflowId ?? '',
       createdAtLabel: record.savedAtLabel,
-      tags: ['Skill', '方法沉淀'],
+      tags: ['方法', '方法沉淀'],
     },
     previousTemplate,
   );
@@ -127,12 +127,12 @@ export function buildTemplateFromResult(result, previousTemplate) {
       contextValues: cloneContextValues(result.contextValues),
       generatedVersions: cloneGeneratedVersions(result.generatedVersions),
       sourceType: 'result-library',
-      sourceLabel: '来自 Results Library',
+      sourceLabel: '来自成果库',
       linkedSkillRecordId: result.linkedSkillRecordId ?? '',
       linkedResultId: result.id,
       linkedWorkflowId: result.linkedWorkflowId ?? '',
       createdAtLabel: result.savedAtLabel,
-      tags: ['Result', '复用入口'],
+      tags: ['成果', '复用入口'],
     },
     previousTemplate,
   );
@@ -154,12 +154,12 @@ export function buildTemplateFromSession(task, session, previousTemplate) {
       contextValues: cloneContextValues(session.contextValues),
       generatedVersions: cloneGeneratedVersions(session.generatedVersions),
       sourceType: 'workflow-session',
-      sourceLabel: '来自当前 Workflow',
+      sourceLabel: '来自当前流程',
       linkedSkillRecordId: session.linkedSkillRecordId ?? '',
       linkedResultId: session.linkedResultId ?? '',
       linkedWorkflowId: session.linkedWorkflowId ?? '',
       createdAtLabel: session.savedAtLabel || formatActivityLabel(),
-      tags: ['Workflow', '继续编辑'],
+      tags: ['流程', '继续编辑'],
     },
     previousTemplate,
   );
@@ -261,13 +261,13 @@ export function markTemplateUsed(template) {
 export function getTemplateSourceBadge(template) {
   switch (template.sourceType) {
     case 'skill-record':
-      return 'Skill Template';
+      return '方法模板';
     case 'result-library':
-      return 'Result Template';
+      return '成果模板';
     case 'workflow-session':
-      return 'Workflow Template';
+      return '流程模板';
     default:
-      return 'Template';
+      return '模板';
   }
 }
 

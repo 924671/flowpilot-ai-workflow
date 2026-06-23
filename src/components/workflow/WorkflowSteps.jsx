@@ -1,13 +1,13 @@
 import React from 'react';
 
 const defaultStepLabels = [
-  { id: 'context', label: 'Context Builder' },
-  { id: 'prompt', label: 'Prompt Preview' },
-  { id: 'session', label: 'AI Work Session' },
-  { id: 'output', label: 'AI Output' },
-  { id: 'check', label: 'Output Check' },
-  { id: 'version', label: 'Version Optimization' },
-  { id: 'save', label: 'Save Result' },
+  { id: 'context', label: '上下文构建' },
+  { id: 'prompt', label: 'Prompt 预览' },
+  { id: 'session', label: 'AI 协作工作区' },
+  { id: 'output', label: 'AI 输出' },
+  { id: 'check', label: '输出质检' },
+  { id: 'version', label: '版本优化' },
+  { id: 'save', label: '保存结果' },
 ];
 
 function WorkflowSteps({
@@ -34,7 +34,7 @@ function WorkflowSteps({
                 <span className="workflow-steps__index">{index + 1}</span>
                 <span className="workflow-steps__meta">
                   <span className="workflow-steps__label">{step.label}</span>
-                  {isCompleted && <span className="workflow-steps__state">{'\u5df2\u51c6\u5907'}</span>}
+                  {isCompleted && <span className="workflow-steps__state">{'已准备'}</span>}
                 </span>
               </button>
             ) : (

@@ -1,22 +1,16 @@
 import React from 'react';
 import Button from '../common/Button';
 
-function ContextBuilder({
-  task,
-  contextData,
-  fields,
-  onFieldChange,
-  onGeneratePrompt,
-}) {
+function ContextBuilder({ task, contextData, fields, onFieldChange, onGeneratePrompt }) {
   return (
     <section className="execute-panel">
       <div className="execute-panel__header">
-        <span className="execute-panel__eyebrow">Context Builder</span>
+        <span className="execute-panel__eyebrow">上下文构建</span>
         <h3 className="execute-panel__title">{task.name} 上下文表单</h3>
       </div>
 
       <p className="execute-panel__description">
-        先补全任务背景、目标、素材、数据结果和汇报对象，再进入 Prompt Preview。
+        先补全任务背景、目标、素材、数据结果和汇报对象，再进入 Prompt 预览。
       </p>
 
       <form

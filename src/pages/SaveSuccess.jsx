@@ -38,15 +38,15 @@ function SaveSuccess({
 
           <div className="save-success-grid">
             <div className="save-success-panel">
-              <strong>已保存到 Results Library</strong>
+              <strong>已保存到成果库</strong>
               <p>{bundle?.resultEntry?.title}</p>
             </div>
             <div className="save-success-panel">
-              <strong>已保存到 My Workflows</strong>
+              <strong>已保存到我的流程</strong>
               <p>{bundle?.workflowEntry?.currentStepLabel}</p>
             </div>
             <div className="save-success-panel">
-              <strong>已记录到 Skill Records</strong>
+              <strong>已记录到方法记录</strong>
               <p>{bundle?.skillRecordEntry?.records?.[0]}</p>
             </div>
           </div>
@@ -68,7 +68,7 @@ function SaveSuccess({
               查看工作流记录
             </Button>
             <Button variant="ghost" onClick={onOpenSkills}>
-              查看 Skill Records
+              查看方法记录
             </Button>
             <Button variant="ghost" onClick={onBackWorkbench}>
               返回 Workbench

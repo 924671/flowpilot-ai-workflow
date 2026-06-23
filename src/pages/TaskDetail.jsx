@@ -21,7 +21,7 @@ function TaskDetail({ task, onBack, onOpenWorkflow }) {
     <section className="task-detail-page">
       <header className="task-detail-page__hero">
         <div className="task-detail-page__hero-copy">
-          <span className="task-detail-page__eyebrow">Task Detail</span>
+          <span className="task-detail-page__eyebrow">任务详情</span>
           <h2 className="task-detail-page__title">{task.name}</h2>
           <p className="task-detail-page__subtitle">{task.subtitle}</p>
           <p className="task-detail-page__description">
@@ -57,7 +57,7 @@ function TaskDetail({ task, onBack, onOpenWorkflow }) {
               </div>
               <div className="task-detail-card__meta-item">
                 <span>推荐 Skill</span>
-                <p>{task.skillTags.join('、')}</p>
+                <p>{task.skillTags.join(' · ')}</p>
               </div>
             </div>
           </Card>

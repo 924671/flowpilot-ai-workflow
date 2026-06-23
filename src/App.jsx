@@ -38,47 +38,47 @@ const pageDefinitions = {
   },
   'task-library': {
     key: 'task-library',
-    title: 'Task Library',
+    title: '任务库',
     description: '从真实工作场景中选择任务，并查看可直接复用的模板入口。',
   },
   'task-detail': {
     key: 'task-library',
-    title: 'Task Detail',
+    title: '????',
     description: '查看任务说明、适用场景、输入要求和推荐 Skill。',
   },
   'my-workflows': {
     key: 'my-workflows',
-    title: 'My Workflows',
+    title: '我的流程',
     description: '查看正在推进、已保存和可继续优化的 AI 工作流。',
   },
   'workflow-detail': {
     key: 'my-workflows',
-    title: 'Workflow Detail',
+    title: '流程详情',
     description: '查看工作流停留步骤、上下文快照和继续编辑入口。',
   },
   'results-library': {
     key: 'results-library',
-    title: 'Results Library',
+    title: '成果库',
     description: '沉淀已完成的报告、方案、纪要和多版本输出。',
   },
   'result-detail': {
     key: 'results-library',
-    title: 'Result Detail',
+    title: '成果详情',
     description: '查看当前结果的来源、版本输出、质检结论和后续复用入口。',
   },
   'save-success': {
     key: 'results-library',
-    title: 'Save Complete',
+    title: '保存完成',
     description: '本次任务已经完成保存，可以查看结果详情，或回到工作台开始下一项任务。',
   },
   'skill-records': {
     key: 'skill-records',
-    title: 'Skill Records',
+    title: '方法记录',
     description: '记录真实任务里用过的方法，而不是游戏化成长反馈。',
   },
   membership: {
     key: 'membership',
-    title: 'Membership',
+    title: '会员方案',
     description: '查看不同方案在工作流额度、版本输出和结果沉淀上的差异。',
   },
 };
@@ -143,13 +143,13 @@ function App() {
         : currentView === 'result-detail'
           ? {
               key: 'results-library',
-              title: activeResult?.title || 'Result Detail',
+              title: activeResult?.title || '成果详情',
               description: '查看结果详情、版本输出和后续复用方式。',
             }
           : currentView === 'workflow-detail'
             ? {
                 key: 'my-workflows',
-                title: activeWorkflowRecord?.taskName || 'Workflow Detail',
+                title: activeWorkflowRecord?.taskName || '流程详情',
                 description: '查看工作流详情、停留步骤和继续编辑入口。',
               }
             : pageDefinitions[currentView] ?? pageDefinitions.workbench;
@@ -250,7 +250,7 @@ function App() {
       savedAtLabel: workflowEntry.savedAtLabel,
       isSaved: true,
       sourceType: 'workflow-library',
-      sourceLabel: `从 My Workflows 恢复 · ${workflowEntry.currentStepLabel}`,
+      sourceLabel: `从我的流程恢复 · ${workflowEntry.currentStepLabel}`,
       linkedWorkflowId: workflowEntry.id,
       linkedResultId: workflowEntry.linkedResultId,
       linkedSkillRecordId: workflowEntry.linkedSkillRecordId,
@@ -265,7 +265,7 @@ function App() {
       savedAtLabel: resultEntry.savedAtLabel,
       isSaved: true,
       sourceType: 'result-library',
-      sourceLabel: `从 Results Library 恢复 · ${resultEntry.title}`,
+      sourceLabel: `从成果库恢复 · ${resultEntry.title}`,
       linkedWorkflowId: resultEntry.linkedWorkflowId,
       linkedResultId: resultEntry.id,
       linkedSkillRecordId: resultEntry.linkedSkillRecordId,

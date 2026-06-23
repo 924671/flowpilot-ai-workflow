@@ -27,12 +27,12 @@ function SaveResult({
   return (
     <section className="execute-panel">
       <div className="execute-panel__header">
-        <span className="execute-panel__eyebrow">Save Result</span>
+        <span className="execute-panel__eyebrow">保存结果</span>
         <h3 className="execute-panel__title">保存结果</h3>
       </div>
 
       <p className="execute-panel__description">
-        将本次工作流结果保存到成果库、我的工作流，并记录本次使用过的方法。
+        将本次工作流结果保存到成果库、我的流程，并记录本次使用过的方法。
       </p>
 
       <div className="save-summary-grid">
@@ -56,7 +56,7 @@ function SaveResult({
 
       <div className="save-result-grid">
         <article className="save-card">
-          <h4 className="save-card__title">保存到 Results Library</h4>
+          <h4 className="save-card__title">保存到成果库</h4>
           <p className="save-card__description">
             保存最终报告和多版本输出，方便后续查看与复用。
           </p>
@@ -66,17 +66,17 @@ function SaveResult({
         </article>
 
         <article className="save-card">
-          <h4 className="save-card__title">保存为 My Workflow</h4>
+          <h4 className="save-card__title">保存为我的流程</h4>
           <p className="save-card__description">
             保留当前上下文、Prompt、质检记录和版本配置，方便继续编辑。
           </p>
           <Button variant="ghost" onClick={onSaveAll}>
-            保存为工作流
+            保存为流程
           </Button>
         </article>
 
         <article className="save-card">
-          <h4 className="save-card__title">记录到 Skill Records</h4>
+          <h4 className="save-card__title">记录到方法记录</h4>
           <p className="save-card__description">
             沉淀本次使用过的方法，形成可复用的 AI 工作经验。
           </p>
@@ -93,13 +93,13 @@ function SaveResult({
           <p className="save-card__description">已生成版本：{versionNames.join(' / ')}</p>
         ) : (
           <p className="save-card__description">
-            当前还没有生成额外版本，仍然可以先保存主结果。
+            当前还没有生成额外版本，仍然可以先保存主要结果。
           </p>
         )}
 
         <div className="save-record-columns">
           <div>
-            <h5 className="save-record-columns__title">Output Check 备注</h5>
+            <h5 className="save-record-columns__title">输出质检备注</h5>
             <ul className="save-card__list">
               {outputChecks.map((item) => (
                 <li key={item.label}>
@@ -110,7 +110,7 @@ function SaveResult({
           </div>
 
           <div>
-            <h5 className="save-record-columns__title">本次使用过的 Skill</h5>
+            <h5 className="save-record-columns__title">本次使用过的方法</h5>
             <ul className="save-card__list">
               {usedSkills.map((item) => (
                 <li key={item.name}>{item.record}</li>
@@ -129,7 +129,7 @@ function SaveResult({
       {activeTemplate ? (
         <div className="template-session-card">
           <div className="template-session-card__header">
-            <span className="template-session-card__badge">Template Linked</span>
+            <span className="template-session-card__badge">已关联模板</span>
             <h4 className="template-session-card__title">当前结果关联了模板入口</h4>
           </div>
           <p className="template-session-card__description">
@@ -152,10 +152,10 @@ function SaveResult({
           </Button>
         ) : null}
         <Button variant="ghost" onClick={() => onNavigate?.('results-library')}>
-          查看 Results Library
+          查看成果库
         </Button>
         <Button variant="ghost" onClick={() => onNavigate?.('skill-records')}>
-          查看 Skill Records
+          查看方法记录
         </Button>
       </div>
 

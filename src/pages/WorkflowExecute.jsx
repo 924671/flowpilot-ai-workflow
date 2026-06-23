@@ -145,7 +145,7 @@ function buildPromptData(task, contextData = {}) {
           '结果需要体现具体度、数据支撑、对象匹配、逻辑完整和下一步可执行性。',
       },
       {
-        title: 'Processing Requirements',
+        title: '处理要求',
         content:
           '先整理初稿，再检查数据是否支撑结论，最后根据汇报对象生成不同版本。',
       },
@@ -160,7 +160,7 @@ function buildSessionOutput(task, contextData = {}, latestInstruction = '') {
       '已读取上下文',
       '已生成初稿建议',
       latestInstruction.includes('数据') ? '正在检查数据支撑' : '数据支撑待检查',
-      '可进入 AI Output',
+      '可进入 AI 输出',
     ],
     summary: `${task.name} 已生成一版可继续质检与版本优化的协作初稿。`,
     sections: [
@@ -319,22 +319,22 @@ function buildUsedSkills(generatedVersions = []) {
       record: '使用了 Context Expression：补充了目标、对象、数据结果和限制条件',
     },
     {
-      name: 'Prompt Structure',
-      record: '使用了 Prompt Structure：生成了结构化 Prompt',
+      name: 'Prompt 结构',
+      record: '使用了 Prompt 结构：生成了结构化 Prompt',
     },
     {
-      name: 'AI Work Session',
-      record: '使用了 AI Work Session：通过对话补充了输出要求',
+      name: 'AI 协作工作区',
+      record: '使用了 AI 协作工作区：通过对话补充了输出要求',
     },
     {
-      name: 'Output Check',
-      record: '使用了 Output Check：检查了数据支撑和可提交度',
+      name: '输出质检',
+      record: '使用了输出质检：检查了数据支撑和可提交度',
     },
     {
-      name: 'Version Optimization',
+      name: '版本优化',
       record: versionNames.length
-        ? `使用了 Version Optimization：生成了${versionNames.join('和')}`
-        : '使用了 Version Optimization：准备生成不同沟通场景下的版本',
+        ? `使用了版本优化：生成了${versionNames.join('和')}`
+        : '使用了版本优化：准备生成不同沟通场景下的版本',
     },
   ];
 }
@@ -594,7 +594,7 @@ function WorkflowExecute({
       return;
     }
 
-    setSaveMessage(`已在 ${bundle.savedAtLabel} 保存到 Results Library、My Workflows 和 Skill Records。`);
+    setSaveMessage(`已在 ${bundle.savedAtLabel} 保存到成果库、我的流程和方法记录。`);
     onShowSaveSuccess?.(bundle);
   };
 
@@ -616,23 +616,23 @@ function WorkflowExecute({
     switch (activeStep) {
       case 'context':
         return {
-          title: 'Context Expression',
+          title: '上下文表达',
           blocks: [
-            { heading: '当前 Skill', items: ['Context Expression'] },
+            { heading: '当前方法', items: ['上下文表达'] },
             { heading: '建议补充', items: ['数据结果', '汇报对象', '限制条件'] },
           ],
         };
       case 'prompt':
         return {
-          title: 'Prompt Structure',
+          title: 'Prompt 结构',
           blocks: [
-            { heading: '当前 Skill', items: ['Prompt Structure'] },
+            { heading: '当前方法', items: ['Prompt 结构'] },
             { heading: '提示', items: ['Prompt 应包含角色、任务、背景、输出格式和评价标准。'] },
           ],
         };
       case 'session':
         return {
-          title: 'AI Work Session',
+          title: 'AI 协作工作区',
           blocks: [
             { heading: '当前模式', items: ['任务内 AI 协作工作区，不是普通聊天页。'] },
             { heading: '建议动作', items: ['先生成汇报初稿', '再检查数据支撑', '必要时改成领导汇报或 PPT 结构'] },
@@ -641,19 +641,19 @@ function WorkflowExecute({
       case 'output':
         return {
           title: '下一步建议',
-          blocks: [{ heading: '操作建议', items: ['进入 Output Check，不要直接复制结果。'] }],
+          blocks: [{ heading: '操作建议', items: ['进入输出质检，不要直接复制结果。'] }],
         };
       case 'check':
         return {
-          title: 'Output Check',
+          title: '输出质检',
           blocks: [
-            { heading: '当前 Skill', items: ['Output Check'] },
+            { heading: '当前方法', items: ['输出质检'] },
             { heading: '常见问题', items: ['数据支撑不足', '结论模糊', '下一步不明确'] },
           ],
         };
       case 'version':
         return {
-          title: selectedVersion ? '当前版本预览' : 'Version Optimization',
+          title: selectedVersion ? '当前版本预览' : '版本优化',
           blocks: selectedVersion
             ? [
                 { heading: `版本名称：${selectedVersion.name}`, items: [] },
@@ -670,21 +670,21 @@ function WorkflowExecute({
         };
       case 'save':
         return {
-          title: 'Save Result',
+          title: '保存结果',
           blocks: [
             {
               heading: '保存建议',
               items: [
-                '保存前建议检查版本名称',
-                '结果保存后可在 Results Library 中复用',
-                '方法记录会同步进入 Skill Records',
+                '保存前建议检查版本名称。',
+                '结果保存后可在成果库中复用。',
+                '方法记录会同步进入方法记录页。',
               ],
             },
           ],
         };
       default:
         return {
-          title: 'Step Notice',
+          title: '步骤提示',
           blocks: [{ heading: '当前步骤', items: ['当前步骤暂未配置，请返回上一步。'] }],
         };
     }
@@ -835,7 +835,7 @@ function WorkflowExecute({
                     继续优化
                   </button>
                   <button type="button" className="button button--primary" onClick={handleGoToSave}>
-                    进入 Save Result
+                    进入保存结果
                   </button>
                 </div>
               ) : null}
@@ -843,7 +843,7 @@ function WorkflowExecute({
               {activeStep === 'session' && workflowState.sessionOutput ? (
                 <div className="execute-assist-card__actions">
                   <button type="button" className="button button--primary" onClick={handleGoToOutput}>
-                    进入 AI Output
+                    进入 AI 输出
                   </button>
                 </div>
               ) : null}

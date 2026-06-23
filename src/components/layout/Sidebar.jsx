@@ -2,11 +2,11 @@ import React from 'react';
 
 const navigationItems = [
   { key: 'workbench', label: 'Workbench', shortLabel: 'W' },
-  { key: 'task-library', label: 'Task Library', shortLabel: 'T' },
-  { key: 'my-workflows', label: 'My Workflows', shortLabel: 'M' },
-  { key: 'results-library', label: 'Results Library', shortLabel: 'R' },
-  { key: 'skill-records', label: 'Skill Records', shortLabel: 'S' },
-  { key: 'membership', label: 'Membership', shortLabel: 'P' },
+  { key: 'task-library', label: '任务库', shortLabel: '任' },
+  { key: 'my-workflows', label: '我的流程', shortLabel: '流' },
+  { key: 'results-library', label: '成果库', shortLabel: '果' },
+  { key: 'skill-records', label: '方法记录', shortLabel: '记' },
+  { key: 'membership', label: '会员方案', shortLabel: '会' },
 ];
 
 function Sidebar({ activeKey, isCollapsed, onToggle, onNavigate }) {
@@ -23,7 +23,7 @@ function Sidebar({ activeKey, isCollapsed, onToggle, onNavigate }) {
           {!isCollapsed && (
             <div className="sidebar__brand-copy">
               <strong className="sidebar__brand-title">FlowPilot</strong>
-              <span className="sidebar__brand-subtitle">AI Workflow</span>
+              <span className="sidebar__brand-subtitle">AI 工作流</span>
             </div>
           )}
         </div>

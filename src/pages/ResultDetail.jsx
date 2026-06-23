@@ -9,7 +9,7 @@ function ResultDetail({ result, onBack, onContinueResult, onCreateTemplate }) {
     return (
       <EmptyState
         title="还没有可查看的结果详情"
-        description="请先从 Results Library 里选择一条结果，再查看它的版本、上下文和后续复用方式。"
+        description="请先从成果库里选择一条结果，再查看它的版本、上下文和后续复用方式。"
       />
     );
   }
@@ -29,7 +29,7 @@ function ResultDetail({ result, onBack, onContinueResult, onCreateTemplate }) {
   return (
     <section className="library-page">
       <div className="library-page__header">
-        <h2 className="library-page__title">Result Detail</h2>
+        <h2 className="library-page__title">成果详情</h2>
         <p className="library-page__description">
           查看当前结果的来源工作流、版本输出、质检结论，以及可继续复用的上下文结构。
         </p>
@@ -91,7 +91,7 @@ function ResultDetail({ result, onBack, onContinueResult, onCreateTemplate }) {
 
           <div className="result-detail-card__actions">
             <Button variant="ghost" onClick={onBack}>
-              返回 Results Library
+              返回成果库
             </Button>
             <Button variant="ghost" onClick={() => onCreateTemplate?.(result)}>
               复用为模板

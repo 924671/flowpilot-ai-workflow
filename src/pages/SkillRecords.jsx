@@ -16,9 +16,9 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
   return (
     <section className="library-page">
       <div className="library-page__header">
-        <h2 className="library-page__title">Skill Records</h2>
+        <h2 className="library-page__title">方法记录</h2>
         <p className="library-page__description">
-          这里记录的是你在真实任务中用过的方法，而不是游戏化成长反馈。
+          这里记录的是你在真实任务中用过的方法，而不是等级或积分。
         </p>
       </div>
 
@@ -26,11 +26,11 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
         <section className="library-group">
           <div className="library-group__header">
             <div className="library-group__title-row">
-              <h3 className="library-group__title">Common Skills</h3>
+              <h3 className="library-group__title">常用方法</h3>
               <span className="library-group__pill">方法记录系统</span>
             </div>
             <p className="library-group__description">
-              Skill 只作为方法标签、执行提示和复盘记录存在，用来帮助你把一次任务沉淀成下次可复用的方法。
+              方法只作为标签、执行提示和复盘记录存在，用来帮助你把一次任务沉淀成下次可复用的方法。
             </p>
           </div>
 
@@ -38,7 +38,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
             {sections.commonSkills.map((skill) => (
               <Card key={skill.title} className="flowpilot-skill-card flowpilot-skill-card--refined">
                 <div className="flowpilot-card-kicker">
-                  <span className="flowpilot-card-kicker__label">Skill</span>
+                  <span className="flowpilot-card-kicker__label">AI Skill</span>
                   <span className="flowpilot-card-kicker__time">{skill.lastUsed}</span>
                 </div>
 
@@ -49,7 +49,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
 
                 <div className="flowpilot-skill-card__meta">
                   <div>
-                    <span>常见任务</span>
+                    <span>常用于哪些任务</span>
                     <p>{skill.tasks}</p>
                   </div>
                 </div>
@@ -67,7 +67,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
           <section className="library-group">
             <div className="library-group__header">
               <div className="library-group__title-row">
-                <h3 className="library-group__title">Recent Usage</h3>
+                <h3 className="library-group__title">最近使用</h3>
                 <span className="library-group__pill library-group__pill--soft">最近 5 条</span>
               </div>
               <p className="library-group__description">
@@ -91,7 +91,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
           <section className="library-group">
             <div className="library-group__header">
               <div className="library-group__title-row">
-                <h3 className="library-group__title">Common Issues</h3>
+                <h3 className="library-group__title">常见问题</h3>
                 <span className="library-group__pill library-group__pill--soft">复盘提醒</span>
               </div>
               <p className="library-group__description">
@@ -112,7 +112,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
         <section className="library-group">
           <div className="library-group__header">
             <div className="library-group__title-row">
-              <h3 className="library-group__title">Reusable Suggestions</h3>
+              <h3 className="library-group__title">可复用建议</h3>
               <span className="library-group__pill library-group__pill--soft">
                 反向创建模板入口
               </span>
@@ -126,7 +126,7 @@ function SkillRecords({ records, sections, onCreateTemplate }) {
             {records.map((record) => (
               <Card key={record.id} className="flowpilot-record-card flowpilot-record-card--refined">
                 <div className="flowpilot-card-kicker">
-                  <span className="flowpilot-card-kicker__label">Method Review</span>
+                  <span className="flowpilot-card-kicker__label">方法复盘</span>
                   <span className="flowpilot-card-kicker__time">{record.savedAtLabel}</span>
                 </div>
 

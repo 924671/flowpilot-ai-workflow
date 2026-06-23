@@ -12,7 +12,7 @@ const ChatEntry = forwardRef(function ChatEntry({ activeTask, activationTrigger 
     <div className={`chat-entry ${isActive ? 'is-active' : ''}`}>
       <div ref={ref} className="chat-entry__anchor" aria-hidden="true" />
       <div className="chat-entry__content">
-        <span className="chat-entry__eyebrow">AI Work Entry</span>
+        <span className="chat-entry__eyebrow">AI 工作入口</span>
         <p className="chat-entry__prompt">{prompt}</p>
       </div>
     </div>

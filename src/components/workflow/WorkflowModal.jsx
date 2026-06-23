@@ -8,8 +8,8 @@ function WorkflowModal({ task, open, activationTrigger, onReset, onEnterWorkflow
 
   const description =
     activationTrigger === 'balloon'
-      ? '气球已被戳破，正在把这个任务切换为对应 AI 工作流。'
-      : '任务线已被剪断，气球飞走，正在进入对应 AI 工作流。';
+      ? '气球已被戳破，正在把这个任务切换为对应的 AI 工作流。'
+      : '任务线已被剪断，气球飞走，正在进入对应的 AI 工作流。';
 
   return (
     <div
@@ -21,7 +21,7 @@ function WorkflowModal({ task, open, activationTrigger, onReset, onEnterWorkflow
       <div className="workflow-modal__backdrop" />
       <div className="workflow-modal__card">
         <div className="workflow-modal__header">
-          <span className="workflow-modal__eyebrow">Workflow Ready</span>
+          <span className="workflow-modal__eyebrow">工作流已准备</span>
           <h3 id="workflow-modal-title" className="workflow-modal__title">
             {task.name} 工作流
           </h3>
@@ -43,7 +43,7 @@ function WorkflowModal({ task, open, activationTrigger, onReset, onEnterWorkflow
             className="workflow-modal__button workflow-modal__button--primary"
             onClick={() => onEnterWorkflow?.(task.id)}
           >
-            进入 Context Builder
+            进入上下文构建
           </button>
         </div>
       </div>

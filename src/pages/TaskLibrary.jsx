@@ -32,7 +32,7 @@ function TaskLibrary({ tasks, templates, onOpenWorkflow, onOpenTemplate, onOpenT
           <div className="library-group__header">
             <div className="library-group__title-row">
               <h3 className="library-group__title">高频任务入口</h3>
-              <span className="library-group__pill">6 个工作流任务</span>
+              <span className="library-group__pill">6 个工作任务</span>
             </div>
             <p className="library-group__description">
               这些入口覆盖复盘、汇报、运营、纪要、分析和演示结构，适合作为 AI 工作流的起点。
@@ -97,12 +97,10 @@ function TaskLibrary({ tasks, templates, onOpenWorkflow, onOpenTemplate, onOpenT
             <div className="library-group__header">
               <div className="library-group__title-row">
                 <h3 className="library-group__title">最近沉淀的模板入口</h3>
-                <span className="library-group__pill library-group__pill--soft">
-                  本地保留
-                </span>
+                <span className="library-group__pill library-group__pill--soft">本地保留</span>
               </div>
               <p className="library-group__description">
-                这些模板来自最近保存的流程、结果或 Skill Records，可以直接回填进入执行页。
+                这些模板来自最近保存的流程、结果或方法记录，可以直接回填进入执行页。
               </p>
             </div>
 
@@ -111,9 +109,7 @@ function TaskLibrary({ tasks, templates, onOpenWorkflow, onOpenTemplate, onOpenT
                 <Card key={template.id} className="flowpilot-template-card">
                   <div className="flowpilot-template-card__copy">
                     <h3 className="flowpilot-template-card__title">{template.title}</h3>
-                    <p className="flowpilot-template-card__description">
-                      {template.description}
-                    </p>
+                    <p className="flowpilot-template-card__description">{template.description}</p>
                     <div className="flowpilot-template-card__tags">
                       {(template.tags ?? []).slice(0, 3).map((tag) => (
                         <Tag key={tag}>{tag}</Tag>

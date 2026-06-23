@@ -15,12 +15,12 @@ function VersionCards({
   return (
     <section className="execute-panel">
       <div className="execute-panel__header">
-        <span className="execute-panel__eyebrow">Version Optimization</span>
+        <span className="execute-panel__eyebrow">版本优化</span>
         <h3 className="execute-panel__title">多版本优化入口</h3>
       </div>
 
       <p className="execute-panel__description">
-        基于 AI Output 和 Output Check，为不同沟通场景生成可预览、可保存的版本。
+        基于 AI 输出和输出质检，为不同沟通场景生成可预览、可保存的版本。
       </p>
 
       <div className="version-cards-grid">
@@ -32,7 +32,9 @@ function VersionCards({
           return (
             <article
               key={version.id}
-              className={`version-card ${isGenerated ? 'is-generated' : ''} ${isSelected ? 'is-selected' : ''}`}
+              className={`version-card ${isGenerated ? 'is-generated' : ''} ${
+                isSelected ? 'is-selected' : ''
+              }`}
             >
               <div className="version-card__top">
                 <div>
@@ -67,7 +69,7 @@ function VersionCards({
             className="button button--primary version-cards__save-button"
             onClick={onGoToSave}
           >
-            进入 Save Result
+            进入保存结果
           </button>
         ) : (
           <span className="version-cards__hint">请先生成至少一个版本</span>

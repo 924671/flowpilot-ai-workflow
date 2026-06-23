@@ -9,10 +9,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
   const [selectedRecordId, setSelectedRecordId] = useState(records[0]?.id ?? '');
 
   const stats = useMemo(() => {
-    const totalUsageItems = records.reduce(
-      (count, item) => count + (item.records?.length ?? 0),
-      0,
-    );
+    const totalUsageItems = records.reduce((count, item) => count + (item.records?.length ?? 0), 0);
 
     return {
       total: records.length,
@@ -42,11 +39,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
   }, [records, searchValue]);
 
   const selectedRecord = useMemo(
-    () =>
-      visibleRecords.find((item) => item.id === selectedRecordId) ??
-      visibleRecords[0] ??
-      records[0] ??
-      null,
+    () => visibleRecords.find((item) => item.id === selectedRecordId) ?? visibleRecords[0] ?? records[0] ?? null,
     [records, selectedRecordId, visibleRecords],
   );
 
@@ -59,7 +52,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
   return (
     <section className="library-page">
       <div className="library-page__header">
-        <h2 className="library-page__title">Skill Records</h2>
+        <h2 className="library-page__title">方法记录</h2>
         <p className="library-page__description">
           这里记录的不是等级，而是你在真实任务里验证过的方法使用轨迹，并且可以反向创建模板入口。
         </p>
@@ -81,29 +74,19 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
             <Card className="results-overview-card">
               <span className="results-overview-card__label">已记录任务</span>
               <strong className="results-overview-card__value">{stats.total}</strong>
-              <p className="results-overview-card__note">
-                每条记录都对应一次真实 workflow 的保存结果。
-              </p>
+              <p className="results-overview-card__note">每条记录都对应一次真实 workflow 的保存结果。</p>
             </Card>
 
             <Card className="results-overview-card">
               <span className="results-overview-card__label">方法使用条目</span>
-              <strong className="results-overview-card__value">
-                {stats.totalUsageItems}
-              </strong>
-              <p className="results-overview-card__note">
-                包含上下文表达、输出质检和版本优化等具体使用动作。
-              </p>
+              <strong className="results-overview-card__value">{stats.totalUsageItems}</strong>
+              <p className="results-overview-card__note">包含上下文表达、输出质检和版本优化等具体使用动作。</p>
             </Card>
 
             <Card className="results-overview-card">
               <span className="results-overview-card__label">常见问题样本</span>
-              <strong className="results-overview-card__value">
-                {stats.commonIssues}
-              </strong>
-              <p className="results-overview-card__note">
-                这些问题会在复盘时提醒你下次先处理掉风险项。
-              </p>
+              <strong className="results-overview-card__value">{stats.commonIssues}</strong>
+              <p className="results-overview-card__note">这些问题会在复盘时提醒你下次先处理风险项。</p>
             </Card>
           </div>
 
@@ -114,9 +97,9 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
             </div>
 
             <div className="results-filter-tabs">
-              <Tag>Common Skills</Tag>
-              <Tag>Recent Usage</Tag>
-              <Tag>Reusable Suggestions</Tag>
+              <Tag>方法总览</Tag>
+              <Tag>最近使用</Tag>
+              <Tag>可复用建议</Tag>
             </div>
           </div>
 
@@ -146,9 +129,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
           ) : visibleRecords.length === 0 ? (
             <Card className="template-empty-state">
               <h4 className="template-empty-state__title">没有符合搜索条件的 Skill 记录</h4>
-              <p className="template-empty-state__description">
-                可以清空搜索词后重新查看全部记录。
-              </p>
+              <p className="template-empty-state__description">可以清空搜索词后重新查看全部记录。</p>
             </Card>
           ) : (
             <div className="results-library-layout">
@@ -169,9 +150,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                         <div className="skill-record-card__header">
                           <div>
                             <h3 className="skill-record-card__title">{record.taskName}</h3>
-                            <p className="skill-record-card__subtitle">
-                              {record.savedAtLabel} · {record.sourceLabel}
-                            </p>
+                            <p className="skill-record-card__subtitle">{record.savedAtLabel} ? {record.sourceLabel}</p>
                           </div>
                         </div>
 
@@ -188,9 +167,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                       </button>
 
                       <div className="skill-record-card__actions">
-                        <Button onClick={() => onCreateTemplate?.(record)}>
-                          创建模板入口
-                        </Button>
+                        <Button onClick={() => onCreateTemplate?.(record)}>创建模板入口</Button>
                       </div>
                     </Card>
                   );
@@ -202,20 +179,16 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                   <Card className="skill-detail-card">
                     <div className="skill-detail-card__header">
                       <div>
-                        <span className="skill-detail-card__eyebrow">Method Review</span>
-                        <h3 className="skill-detail-card__title">
-                          {selectedRecord.taskName}
-                        </h3>
+                        <span className="skill-detail-card__eyebrow">方法复盘</span>
+                        <h3 className="skill-detail-card__title">{selectedRecord.taskName}</h3>
                       </div>
                       <Tag>{selectedRecord.savedAtLabel}</Tag>
                     </div>
 
-                    <p className="skill-detail-card__description">
-                      这里复盘的是这次真实任务中哪些方法真正发挥了作用，以及哪些问题下次应该提前规避。
-                    </p>
+                    <p className="skill-detail-card__description">这里复盘的是这次真实任务中哪些方法真正发挥了作用，以及哪些问题下次应该提前规避。</p>
 
                     <div className="skill-detail-card__section">
-                      <span className="skill-detail-card__label">Recent usage</span>
+                      <span className="skill-detail-card__label">最近使用</span>
                       <ul className="skill-detail-card__bullet-list">
                         {(selectedRecord.records ?? []).map((item) => (
                           <li key={item}>{item}</li>
@@ -224,7 +197,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                     </div>
 
                     <div className="skill-detail-card__section">
-                      <span className="skill-detail-card__label">Common Skills</span>
+                      <span className="skill-detail-card__label">常见 Skill</span>
                       <div className="skill-detail-card__skill-grid">
                         {sections.commonSkills.map((skill) => (
                           <div key={skill.title} className="skill-detail-card__skill-item">
@@ -236,7 +209,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                     </div>
 
                     <div className="skill-detail-card__section">
-                      <span className="skill-detail-card__label">Common issues</span>
+                      <span className="skill-detail-card__label">常见问题</span>
                       <div className="skill-detail-card__panel">
                         <p>{selectedRecord.issue}</p>
                         <ul className="skill-detail-card__bullet-list">
@@ -248,7 +221,7 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                     </div>
 
                     <div className="skill-detail-card__section">
-                      <span className="skill-detail-card__label">Reusable suggestions</span>
+                      <span className="skill-detail-card__label">可复用建议</span>
                       <div className="skill-detail-card__panel">
                         <p>{selectedRecord.suggestion}</p>
                         <ul className="skill-detail-card__bullet-list">
@@ -267,20 +240,14 @@ function MethodArchive({ records, sections, onCreateTemplate }) {
                           {selectedRecord.contextValues?.projectName}
                         </p>
                         <p>
-                          <strong>汇报对象：</strong>
-                          {selectedRecord.contextValues?.reportAudience}
+                          <strong>上次停留步骤：</strong>
+                          {selectedRecord.contextValues?.lastStepLabel}
                         </p>
                         <p>
-                          <strong>模板用途：</strong>
-                          下次可直接回流到 Workbench，作为新的任务模板入口。
+                          <strong>存储时间：</strong>
+                          {selectedRecord.savedAtLabel}
                         </p>
                       </div>
-                    </div>
-
-                    <div className="skill-detail-card__actions">
-                      <Button onClick={() => onCreateTemplate?.(selectedRecord)}>
-                        反向创建模板入口
-                      </Button>
                     </div>
                   </Card>
                 )}

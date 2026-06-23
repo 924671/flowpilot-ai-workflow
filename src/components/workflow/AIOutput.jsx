@@ -10,7 +10,7 @@ const fallbackSections = [
   {
     id: 'result-interpretation',
     title: '结果解读',
-    content: '请先回到 AI Work Session 生成初稿建议，再进入更完整的输出内容。',
+    content: '请先回到 AI 协作工作区生成初稿建议，再进入更完整的输出内容。',
   },
   {
     id: 'issue-review',
@@ -35,12 +35,12 @@ function AIOutput({ taskName, aiOutput, onGoToCheck }) {
   return (
     <section className="execute-panel">
       <div className="execute-panel__header">
-        <span className="execute-panel__eyebrow">AI Output</span>
-        <h3 className="execute-panel__title">{taskName} 输出初稿</h3>
+        <span className="execute-panel__eyebrow">AI 输出</span>
+        <h3 className="execute-panel__title">{taskName} 的初稿输出</h3>
       </div>
 
       <p className="execute-panel__description">
-        以下内容基于 Context Builder 和 AI Work Session 中的协作记录生成。
+        以下内容基于上下文构建和 AI 协作工作区中的协作记录生成。
       </p>
 
       <div className="ai-output-grid">
@@ -53,7 +53,7 @@ function AIOutput({ taskName, aiOutput, onGoToCheck }) {
       </div>
 
       <div className="card-footer">
-        <Button onClick={onGoToCheck}>进入 Output Check</Button>
+        <Button onClick={onGoToCheck}>进入输出质检</Button>
       </div>
     </section>
   );

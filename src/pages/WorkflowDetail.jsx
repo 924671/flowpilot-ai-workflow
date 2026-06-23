@@ -9,7 +9,7 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
     return (
       <EmptyState
         title="还没有可查看的工作流详情"
-        description="请先从 My Workflows 里选择一条记录，再查看它停留在哪一步、用过哪些方法，以及如何继续编辑。"
+        description="请先从我的流程里选择一条记录，再查看它停留在哪一步、用过哪些方法，以及如何继续编辑。"
       />
     );
   }
@@ -20,7 +20,7 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
   return (
     <section className="library-page">
       <div className="library-page__header">
-        <h2 className="library-page__title">Workflow Detail</h2>
+        <h2 className="library-page__title">流程详情</h2>
         <p className="library-page__description">
           查看当前工作流保留下来的上下文、步骤位置、版本输出和下一次继续编辑的入口。
         </p>
@@ -30,7 +30,7 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
         <Card className="workflow-detail-card">
           <div className="workflow-detail-card__header">
             <div>
-              <span className="workflow-detail-card__eyebrow">Workflow Resume</span>
+              <span className="workflow-detail-card__eyebrow">流程回顾</span>
               <h3 className="workflow-detail-card__title">{workflow.taskName}</h3>
             </div>
             <Tag>{workflow.status}</Tag>
@@ -77,14 +77,14 @@ function WorkflowDetail({ workflow, onBack, onResumeWorkflow, onOpenLinkedResult
                   </p>
                 ))
               ) : (
-                <p>当前还没有生成额外版本，适合从 Version Optimization 继续扩写。</p>
+                <p>当前还没有生成额外版本，适合从版本优化继续扩写。</p>
               )}
             </div>
           </section>
 
           <div className="workflow-detail-card__actions">
             <Button variant="ghost" onClick={onBack}>
-              返回 My Workflows
+              返回我的流程
             </Button>
             <Button variant="ghost" onClick={() => onOpenLinkedResult?.(workflow)}>
               查看关联结果

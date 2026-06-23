@@ -11,12 +11,12 @@ function OutputCheck({ checkItems = [], onGoToVersion }) {
   return (
     <section className="execute-panel">
       <div className="execute-panel__header">
-        <span className="execute-panel__eyebrow">Output Check</span>
+        <span className="execute-panel__eyebrow">输出质检</span>
         <h3 className="execute-panel__title">输出质检结果</h3>
       </div>
 
       <p className="execute-panel__description">
-        基于当前上下文和 AI Output，检查结果是否具体、有支撑、匹配对象，并判断是否能继续提交或生成版本。
+        基于当前上下文和 AI 输出，检查结果是否具体、有支撑、匹配对象，并判断是否能够继续提交或生成版本。
       </p>
 
       <div className="output-check-grid">

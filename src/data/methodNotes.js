@@ -1,35 +1,35 @@
 export const skillArchiveSections = {
   commonSkills: [
     {
-      title: 'Context Expression',
+      title: '上下文表达',
       description: '用于补齐目标、对象、背景与限制条件，帮助 AI 理解任务边界。',
       tasks: '项目复盘、周报月报、会议纪要',
       lastUsed: '6月19日 14:20',
       suggestion: '先明确目标、对象和限制条件，再进入 Prompt 生成。',
     },
     {
-      title: 'Prompt Structure',
+      title: 'Prompt 结构',
       description: '用于把零散信息组织成可执行的 Prompt 结构，减少一次性试错。',
       tasks: '活动方案、竞品分析、PPT 大纲',
       lastUsed: '6月21日 11:05',
       suggestion: '固定 Role、Task、Context、Output Format 四层骨架。',
     },
     {
-      title: 'Output Check',
+      title: '输出质检',
       description: '用于检查结果是否具体、有支撑、可提交，而不是直接复制输出。',
       tasks: '项目复盘、会议纪要、竞品分析',
       lastUsed: '6月21日 19:10',
       suggestion: '保存前先检查数据依据、对象匹配和下一步动作。',
     },
     {
-      title: 'Version Optimization',
+      title: '版本优化',
       description: '用于把一份结果转成不同沟通场景下可直接复用的版本。',
       tasks: '周报月报、活动方案、PPT 大纲',
       lastUsed: '6月20日 17:40',
       suggestion: '至少沉淀一个领导汇报版和一个团队同步版。',
     },
     {
-      title: 'Workflow Reuse',
+      title: '流程复用',
       description: '用于把一次有效执行过程沉淀成模板入口，方便下次直接回填。',
       tasks: '项目复盘、竞品分析、活动方案',
       lastUsed: '6月21日 21:15',
@@ -45,7 +45,7 @@ export const skillArchiveSections = {
   reusableSuggestions: [
     '下次写复盘时，先补充目标、结果、问题和下一步计划。',
     '生成方案前，先明确用户分层、渠道动作和资源边界。',
-    '输出后不要直接提交，先做 Output Check 再保存。',
+    '输出后不要直接提交，先做输出质检再保存。',
   ],
 };
 
@@ -56,9 +56,9 @@ export const initialSkillRecords = [
     taskName: '项目复盘报告',
     savedAtLabel: '6月19日 14:20',
     records: [
-      '使用了 Context Expression：补充了目标、对象和限制条件',
-      '使用了 Output Check：发现结果缺少数据支撑',
-      '使用了 Version Optimization：生成了领导汇报版和团队同步版',
+      '使用了上下文表达：补充了目标、对象和限制条件',
+      '使用了输出质检：发现结果缺少数据支撑',
+      '使用了版本优化：生成了领导汇报版和团队同步版',
     ],
     issue: '数据支撑不足，部分结论还需要补充更细的验证信息。',
     suggestion: '保留这次复盘输入结构，作为同类项目复盘的模板入口。',
@@ -89,7 +89,7 @@ export const initialSkillRecords = [
     ],
     currentStepId: 'save',
     sourceType: 'workflow-library',
-    sourceLabel: '来自 My Workflows',
+    sourceLabel: '来自我的流程',
     linkedWorkflowId: 'workflow-project-review-demo',
     linkedResultId: 'result-project-review-demo',
   },
@@ -99,9 +99,9 @@ export const initialSkillRecords = [
     taskName: '周报月报生成',
     savedAtLabel: '6月20日 17:40',
     records: [
-      '使用了 Context Expression：补充了本周目标、进展和阻塞信息',
-      '使用了 Prompt Structure：把零散更新整理成稳定的周报结构',
-      '使用了 Version Optimization：生成了团队同步版和邮件通知版',
+      '使用了上下文表达：补充了本周目标、进展和阻塞信息',
+      '使用了Prompt 结构：把零散更新整理成稳定的周报结构',
+      '使用了版本优化：生成了团队同步版和邮件通知版',
     ],
     issue: '部分结果仍缺少数据依据，向上汇报版还需要更强的结论表达。',
     suggestion: '保留这次周报输入结构，作为后续月报和阶段汇总模板。',
@@ -132,7 +132,7 @@ export const initialSkillRecords = [
     ],
     currentStepId: 'save',
     sourceType: 'result-library',
-    sourceLabel: '来自 Results Library',
+    sourceLabel: '来自成果库',
     linkedWorkflowId: 'workflow-weekly-report-demo',
     linkedResultId: 'result-weekly-report-demo',
   },

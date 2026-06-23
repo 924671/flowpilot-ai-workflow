@@ -19,8 +19,7 @@ function ResultsLibrary({
     const keyword = searchValue.trim().toLowerCase();
 
     return results.filter((result) => {
-      const matchesFilter =
-        activeFilter === '全部结果' ? true : result.resultType === activeFilter;
+      const matchesFilter = activeFilter === '全部结果' ? true : result.resultType === activeFilter;
       const haystack = [
         result.title,
         result.taskName,
@@ -49,9 +48,7 @@ function ResultsLibrary({
     <section className="library-page">
       <div className="library-page__header">
         <h2 className="library-page__title">成果库</h2>
-        <p className="library-page__description">
-          保存已完成的报告、方案、纪要和多版本输出。
-        </p>
+        <p className="library-page__description">保存已完成的报告、方案、纪要和多版本输出。</p>
       </div>
 
       <div className="library-list">
@@ -107,9 +104,7 @@ function ResultsLibrary({
                 <div className="flowpilot-card-heading">
                   <div>
                     <h3 className="flowpilot-result-card__title">{result.title}</h3>
-                    <p className="flowpilot-result-card__subtitle">
-                      来源工作流：{result.taskName}
-                    </p>
+                    <p className="flowpilot-result-card__subtitle">来源流程：{result.taskName}</p>
                   </div>
                 </div>
 
